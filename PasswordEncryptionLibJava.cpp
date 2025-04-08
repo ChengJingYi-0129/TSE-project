@@ -11,6 +11,7 @@ using namespace std;
 // Global encryption object to maintain state
 static ENCRYPTION encryptor;
 static isdigit_expended IDE;
+// JNI function implementations
 
 JNIEXPORT void JNICALL Java_PasswordEncryption_SetPassword(JNIEnv *env, jobject obj, jstring password) {
     const char *nativeString = env->GetStringUTFChars(password, 0);
