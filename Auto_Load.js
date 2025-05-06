@@ -43,3 +43,7 @@ function ValidateOTP(){
     window.location.href="Enrollment.html";
 
 }
+
+function ValidateID(){
+    document.getElementsByClassName("ID").innerHTML = "ID";
+}

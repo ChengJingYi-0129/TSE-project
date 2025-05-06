@@ -12,11 +12,11 @@
             <form>
                 <img src="https://myeducation.my/wp-content/uploads/2021/05/MMU-001-01.jpg" alt="MMU" width="40%" height="20%" class="MMUImg01">
                 <h1 class="Sign_In">OTP Authentication</h1>
-                <h3 id="text1"></h3>
+                <h3 id="text1" onload="Text1Generate()"></h3>
                 <table class="InterfaceTable">
                     <tr>
                         <th>User ID</th>
-                        <td class="ID"></td>
+                        <td class="ID"><input type="number" onload="ValidateID()" readonly></td>
                     </tr>
                     <tr>
                         <th>OTP</th>
