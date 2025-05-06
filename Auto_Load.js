@@ -45,5 +45,5 @@ function ValidateOTP(){
 }
 
 function ValidateID(){
-    document.getElementsByClassName("ID").innerHTML = "ID";
+    document.getElementsByClassName("ID").innerHTML = ID;
 }
