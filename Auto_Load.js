@@ -1,7 +1,7 @@
 email=ID+"@student.mmu.edu.my. ";
 var hidePassword=ID.replace(/(.{4})./, '$1******');
 var OTP=Math.floor(Math.random()*1000000);
-let temp3=Date();
+let temp3=new Date();
 temp3.setMinutes(temp3.getMinutes()+10);
 
 function sendToOutlook()
