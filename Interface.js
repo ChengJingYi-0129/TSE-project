@@ -10,8 +10,8 @@ function getIDandPassword(){
         return;
     }
     const form=document.getElementById("loginForm");
-    ID=document.querySelector('input[name="userID"]').value;
-    password=document.querySelector('input[name="password"]').value;
+    ID=document.getElementsByName("userID")[0].value;
+    password=document.getElementsByName("password")[0].value;
 
     // Assuming password verification logic here
     if (password === "yourCorrectPassword") { // Replace "yourCorrectPassword" with the actual correct password
