@@ -11,6 +11,7 @@ function getIDandPassword(){
     }
     const form=document.getElementById("loginForm");
     ID=document.getElementsByName("userID")[0].value;
+    sessionStorage.setItem('userID', ID);
     password=document.getElementsByName("password")[0].value;
 
     // Assuming password verification logic here

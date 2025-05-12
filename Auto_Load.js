@@ -1,14 +1,12 @@
+var ID = sessionStorage.getItem('userID');
+if (!ID) {
+    window.location.href = 'Interface.html';
+}
     var email = ID + "@student.mmu.edu.my";
     var hidePassword = ID.replace(/(.{4})./, '$1******');
     var OTP = Math.floor(Math.random() * 1000000);
     var temp3 = new Date();
     temp3.setMinutes(temp3.getMinutes() + 10);
-
-    function clearData() {
-        document.getElementById("loginForm").innerHTML = "";
-        document.getElementById("authenticateForm").innerHTML = "";
-    }
-    // clearData();  // optional
 
     window.onload = function Text1Generate() {
         let temp = "To complete login process to CLiC, please enter 6 digits OTP code provided to email ";
