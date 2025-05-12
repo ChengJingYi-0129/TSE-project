@@ -1,8 +1,8 @@
 window.onload = function () {
-    let email = ID + "@student.mmu.edu.my";
-    let hidePassword = ID.replace(/(.{4})./, '$1******');
-    let OTP = Math.floor(Math.random() * 1000000);
-    let temp3 = new Date();
+    var email = ID + "@student.mmu.edu.my";
+    var hidePassword = ID.replace(/(.{4})./, '$1******');
+    var OTP = Math.floor(Math.random() * 1000000);
+    var temp3 = new Date();
     temp3.setMinutes(temp3.getMinutes() + 10);
 
     function sendToOutlook() {
