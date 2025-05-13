@@ -14,10 +14,20 @@ if (!ID) {
         let temp = "To complete login process to CLiC, please enter 6 digits OTP code provided to email ";
         let temp1b = hidePassword + "@student.mmu.edu.my";
         let temp2 = " Valid 10 minutes until ";
-        document.getElementById("text1").innerHTML = temp + temp1b + temp2 + temp3;
+        document.getElementById("text1").innerHTML = temp + temp1b + temp2 + temp3.toLocaleString();
 
-        // Send the OTP to Outlook
-        window.open(`mailto:${email}?subject=${encodeURIComponent("CLiC OTP")}&body=${encodeURIComponent("Your OTP is: " + OTP + ". Valid 10 minutes until " + temp3)}`);
+        // Auto-send OTP via AJAX to PHP
+        fetch('send_otp.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(OTP)}&expiry=${encodeURIComponent(temp3.toLocaleString())}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data.trim() !== "sent") {
+                alert("Failed to send OTP email.");
+            }
+        });
 
         // Display the ID (assuming you have an element with class "ID")
         let idElements = document.getElementsByClassName("ID");
