@@ -31,7 +31,7 @@ if (!ID) {
             alert("OTP has expired. Please request a new OTP.");
             return;
         }
-        let userOtp = document.getElementById("OTP"); // Assuming you have an input field with id 'OTP'
+        let userOtp = document.getElementsByName("ValidateOTP")[0].value;// Assuming you have an input field with id 'OTP'
         if (!userOtp || userOtp.value === "") {
             alert("Please enter your OTP");
             return;
