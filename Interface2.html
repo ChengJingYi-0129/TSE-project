@@ -9,18 +9,18 @@
     </head>
     <body class="frontPage">
         <div class="TransparentContainer" >
-            <form>
+            <form action="send_otp.php" method="post" class="InterfaceForm" id="OTPForm">
                 <img src="https://myeducation.my/wp-content/uploads/2021/05/MMU-001-01.jpg" alt="MMU" width="40%" height="20%" class="MMUImg01">
                 <h1 class="Sign_In">OTP Authentication</h1>
                 <h3 id="text1"></h3>
                 <table class="InterfaceTable">
                     <tr>
                         <th>User ID</th>
-                        <td class="ID"><input type="number" readonly></td>
+                        <td class="ID"><input type="number" id="ID" readonly></td>
                     </tr>
                     <tr>
                         <th>OTP</th>
-                        <td><input type="number" placeholder="Enter your OTP" id="OTP" required></td>
+                        <td><input type="number" placeholder="Enter your OTP" id="OTP" name="OTP" required></td>
                     </tr>
                 </table>
                 <button type="button" name="ValidateOTP" class="Sign_In" style="width:100px; height:40px; " onclick="ValidateOTP()">Validate OTP</button>
