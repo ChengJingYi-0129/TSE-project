@@ -14,10 +14,12 @@ $query->bind_param("ss",$ID,$Password);
 $query->execute();
 $result=$query->get_result();
 
-$query=$connection->prepare("SELECT NAME FROM student_info WHERE Student_ID= ? AND Student_Password=?");
+$query=$connection->prepare("SELECT Student_Name FROM student_info WHERE Student_ID= ? AND Student_Password=?");
 $query->bind_param("ss",$ID,$Password);
 $query->execute();
 $name=$query->get_result();
+$row = $name->fetch_assoc();
+$studentName = $row['Student_Name'];
 #close the database
 $query->close();
 $connection->close();
@@ -28,20 +30,6 @@ if($result->num_rows<=0){
     exit();    
 }
 ?>
-
-session_start();
-    $otp=rand(100000,999999);
-    $_SESSION['otp']=$otp;
-    $expiry=time()+60*10;
-    $_SESSION['expiry']=$expiry;
-    $to = $ID."@student.mmu.edu.my";
-    $subject = "CLiC OTP";
-    $message = "Your OTP is: $otp. Valid 10 minutes until ".date("Y-m-d H:i:s", $expiry);
-    $headers = "From: noreply@mmu.edu.my\r\n";
-    mail($to, $subject, $message, $headers);
-    $query->close();
-    $connection->close();
-    header("Location: interface2.html");
 
 <?php
 session_start();
@@ -74,7 +62,7 @@ try {
 
     //Recipients
     $mail->setFrom('fernandopikachu156@gmail.com', 'Fernando');
-    $mail->addAddress($to, $name);
+    $mail->addAddress($to, $studentName);
 
     // Content
     $mail->isHTML(true);

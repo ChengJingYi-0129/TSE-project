@@ -20,3 +20,27 @@
     transform:translateX(-50%)
 }
 
+.calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+.calendar div {
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+}
+        
+.calendar .header {
+            font-weight: bold;
+            background-color: #eee;
+        }
+        
+.calendar .today {
+            background-color: lightblue;
+        }
