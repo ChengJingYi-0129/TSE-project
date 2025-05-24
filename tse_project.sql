@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 21, 2025 at 05:00 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: May 24, 2025 at 03:12 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,16 +24,182 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `Admin_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Admin_name` varchar(255) NOT NULL,
+  `Admin_pass` varchar(255) NOT NULL,
+  PRIMARY KEY (`Admin_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`Admin_ID`, `Admin_name`, `Admin_pass`) VALUES
+(1, 'Admin', 'admin123');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course`
+--
+
+DROP TABLE IF EXISTS `course`;
+CREATE TABLE IF NOT EXISTS `course` (
+  `course_id` varchar(20) NOT NULL,
+  `prerequisite_id` int(11) DEFAULT NULL,
+  `lecturer_id` varchar(20) DEFAULT NULL,
+  `course_code` varchar(20) DEFAULT NULL,
+  `course_name` varchar(100) DEFAULT NULL,
+  `credit_hours` int(11) DEFAULT NULL,
+  `is_core` tinyint(1) DEFAULT NULL,
+  `grade` int(11) DEFAULT NULL,
+  PRIMARY KEY (`course_id`),
+  KEY `lecturer_id` (`lecturer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_prerequisite`
+--
+
+DROP TABLE IF EXISTS `course_prerequisite`;
+CREATE TABLE IF NOT EXISTS `course_prerequisite` (
+  `prerequisite_id` int(11) NOT NULL AUTO_INCREMENT,
+  `required_course_id` varchar(20) DEFAULT NULL,
+  `min_grade` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`prerequisite_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `enrollment`
+--
+
+DROP TABLE IF EXISTS `enrollment`;
+CREATE TABLE IF NOT EXISTS `enrollment` (
+  `enrollment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(20) DEFAULT NULL,
+  `course_id` varchar(20) DEFAULT NULL,
+  `admin_id` varchar(20) DEFAULT NULL,
+  `semester_id` varchar(20) DEFAULT NULL,
+  `enrollment_date` date DEFAULT NULL,
+  `student_status` varchar(50) DEFAULT NULL,
+  `final_grade` varchar(2) DEFAULT NULL,
+  `registration_start` date DEFAULT NULL,
+  `registration_end` date DEFAULT NULL,
+  `is_retake` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`enrollment_id`),
+  KEY `student_id` (`student_id`),
+  KEY `fk_enrollment_course` (`course_id`),
+  KEY `fk_enrollment_semester` (`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grade`
+--
+
+DROP TABLE IF EXISTS `grade`;
+CREATE TABLE IF NOT EXISTS `grade` (
+  `grade` char(2) NOT NULL,
+  `grade_point` decimal(4,2) DEFAULT NULL,
+  `is_pass` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`grade`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `industrial_training`
+--
+
+DROP TABLE IF EXISTS `industrial_training`;
+CREATE TABLE IF NOT EXISTS `industrial_training` (
+  `training_id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(20) DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `supervisor_name` varchar(100) DEFAULT NULL,
+  `student_status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`training_id`),
+  KEY `student_id` (`student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lecturer`
+--
+
+DROP TABLE IF EXISTS `lecturer`;
+CREATE TABLE IF NOT EXISTS `lecturer` (
+  `lecturer_id` varchar(20) NOT NULL,
+  `Pass` varchar(255) NOT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`lecturer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+DROP TABLE IF EXISTS `payment`;
+CREATE TABLE IF NOT EXISTS `payment` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(20) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `payment_date` datetime DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `invoice_number` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`payment_id`),
+  KEY `student_id` (`student_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `semester`
+--
+
+DROP TABLE IF EXISTS `semester`;
+CREATE TABLE IF NOT EXISTS `semester` (
+  `semester_id` varchar(20) NOT NULL,
+  `semester_name` varchar(50) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  PRIMARY KEY (`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `student_info`
 --
 
-CREATE TABLE `student_info` (
+DROP TABLE IF EXISTS `student_info`;
+CREATE TABLE IF NOT EXISTS `student_info` (
   `Student_ID` varchar(10) NOT NULL,
   `Student_Name` varchar(50) DEFAULT NULL,
   `Student_Password` varchar(50) DEFAULT NULL,
   `Student_Contact_Number` int(11) DEFAULT NULL,
   `Date_Registered` date DEFAULT NULL,
-  `Date_Graduated` date DEFAULT NULL
+  `Date_Graduated` date DEFAULT NULL,
+  PRIMARY KEY (`Student_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -60,14 +226,17 @@ INSERT INTO `student_info` (`Student_ID`, `Student_Name`, `Student_Password`, `S
 -- Table structure for table `subject`
 --
 
-CREATE TABLE `subject` (
+DROP TABLE IF EXISTS `subject`;
+CREATE TABLE IF NOT EXISTS `subject` (
   `Subject_Code` varchar(8) NOT NULL,
   `Subject_Name` varchar(50) DEFAULT NULL,
   `Subject_Credit_Hours` int(11) DEFAULT NULL,
   `Graded` tinyint(1) DEFAULT NULL,
   `Prerequirement_Subject_Code` varchar(8) DEFAULT NULL,
   `elective` tinyint(1) DEFAULT NULL,
-  `Elective_Group` int(11) DEFAULT NULL
+  `Elective_Group` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Subject_Code`),
+  UNIQUE KEY `Subject_Code` (`Subject_Code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -123,21 +292,34 @@ INSERT INTO `subject` (`Subject_Code`, `Subject_Name`, `Subject_Credit_Hours`, `
 ('WCB1050', 'PERFORMING ARTS', 2, 0, NULL, 1, NULL);
 
 --
--- Indexes for dumped tables
+-- Constraints for dumped tables
 --
 
 --
--- Indexes for table `student_info`
+-- Constraints for table `course`
 --
-ALTER TABLE `student_info`
-  ADD PRIMARY KEY (`Student_ID`);
+ALTER TABLE `course`
+  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`lecturer_id`) REFERENCES `lecturer` (`lecturer_id`);
 
 --
--- Indexes for table `subject`
+-- Constraints for table `enrollment`
 --
-ALTER TABLE `subject`
-  ADD PRIMARY KEY (`Subject_Code`),
-  ADD UNIQUE KEY `Subject_Code` (`Subject_Code`);
+ALTER TABLE `enrollment`
+  ADD CONSTRAINT `enrollment_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_info` (`Student_ID`),
+  ADD CONSTRAINT `fk_enrollment_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
+  ADD CONSTRAINT `fk_enrollment_semester` FOREIGN KEY (`semester_id`) REFERENCES `semester` (`semester_id`);
+
+--
+-- Constraints for table `industrial_training`
+--
+ALTER TABLE `industrial_training`
+  ADD CONSTRAINT `industrial_training_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_info` (`Student_ID`);
+
+--
+-- Constraints for table `payment`
+--
+ALTER TABLE `payment`
+  ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student_info` (`Student_ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
