@@ -54,6 +54,24 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
                                         </div>
                                     </div>
 
+                                    <!-- Total Lecturer -->
+                                    <div class="col-md-6 col-xl report-inner-card">
+                                        <div class="inner-card-text">
+                                            <?php
+                                            $sql = "SELECT COUNT(*) FROM lecturer";
+                                            $query = $dbh->prepare($sql);
+                                            $query->execute();
+                                            $totalStudents = $query->fetchColumn();
+                                            ?>
+                                            <span class="report-title">Total Lecturers</span>
+                                            <h4><?= htmlentities($totalStudents); ?></h4>
+                                            <a href="manage-Lec.php"><span class="report-count">View Lecturers</span></a>
+                                        </div>
+                                        <div class="inner-card-icon bg-info">
+                                            <i class="icon-user"></i>
+                                        </div>
+                                    </div>
+
                                     <!-- Total Courses -->
                                     <div class="col-md-6 col-xl report-inner-card">
                                         <div class="inner-card-text">

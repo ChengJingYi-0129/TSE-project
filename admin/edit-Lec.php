@@ -6,25 +6,24 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
   header('location:logout.php');
 } else {
   if (isset($_POST['submit'])) {
-    $stuname = $_POST['stuname'];
-    $stuid = $_POST['stuid'];
+    $lecname = $_POST['lecname'];
+    $lecid = $_POST['lecid'];
     $connum = $_POST['connum'];
     $eid = $_GET['editid'];
 
-    $sql = "UPDATE student_info SET Student_Name=:stuname, Student_Contact_Number=:connum WHERE Student_ID=:eid";
+    $sql = "UPDATE lecturer SET first_name=:lecname, Contact_Num=:connum WHERE lecturer_id=:eid";
     $query = $dbh->prepare($sql);
-    $query->bindParam(':stuname', $stuname, PDO::PARAM_STR);
+    $query->bindParam(':lecname', $lecname, PDO::PARAM_STR);
     $query->bindParam(':connum', $connum, PDO::PARAM_STR);
     $query->bindParam(':eid', $eid, PDO::PARAM_STR);
     $query->execute();
-    echo '<script>alert("Student has been updated")</script>';
+    echo '<script>alert("Lecturer has been updated")</script>';
   }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Student Management System || Update Student</title>
+  <title>Student Management System || Update Lecturer</title>
   <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
   <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -40,18 +39,18 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
     <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-          <h3 class="page-title">Update Student</h3>
+          <h3 class="page-title">Update Lecturer</h3>
         </div>
         <div class="row">
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title text-center">Update Student Details</h4>
+                <h4 class="card-title text-center">Update Lecturer Details</h4>
                 <hr/>
                 <form class="forms-sample" method="post">
                   <?php
                   $eid = $_GET['editid'];
-                  $sql = "SELECT * FROM student_info WHERE Student_ID = :eid";
+                  $sql = "SELECT * FROM lecturer WHERE lecturer_id = :eid";
                   $query = $dbh->prepare($sql);
                   $query->bindParam(':eid', $eid, PDO::PARAM_STR);
                   $query->execute();
@@ -60,16 +59,16 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                     foreach ($results as $row) {
                   ?>
                   <div class="form-group">
-                    <label>Student Name</label>
-                    <input type="text" name="stuname" value="<?php echo htmlentities($row->Student_Name); ?>" class="form-control" required>
+                    <label>Lecturer Name</label>
+                    <input type="text" name="lecname" value="<?php echo htmlentities($row->first_name); ?>" class="form-control" required>
                   </div>
                   <div class="form-group">
-                    <label>Student ID</label>
-                    <input type="text" name="stuid" value="<?php echo htmlentities($row->Student_ID); ?>" class="form-control" readonly>
+                    <label>Lecturer ID</label>
+                    <input type="text" name="lecid" value="<?php echo htmlentities($row->lecturer_id); ?>" class="form-control" readonly>
                   </div>
                   <div class="form-group">
                     <label>Contact Number</label>
-                    <input type="text" name="connum" value="<?php echo htmlentities($row->Student_Contact_Number); ?>" class="form-control" required maxlength="10">
+                    <input type="text" name="connum" value="<?php echo htmlentities($row->Contact_Num); ?>" class="form-control" required maxlength="10">
                   </div>
                   <?php } } ?>
                   <button type="submit" class="btn btn-primary mr-2" name="submit">Update</button>

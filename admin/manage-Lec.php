@@ -5,21 +5,21 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['sturecmsaid'] == 0)) {
   header('location:logout.php');
 } else {
-  // Delete student
+  // Delete lecturer
   if (isset($_GET['delid'])) {
     $rid = $_GET['delid'];
-    $sql = "DELETE FROM student_info WHERE Student_ID = :rid";
+    $sql = "DELETE FROM lecturer WHERE lecturer_id = :rid";
     $query = $dbh->prepare($sql);
     $query->bindParam(':rid', $rid, PDO::PARAM_STR);
     $query->execute();
     echo "<script>alert('Data deleted');</script>";
-    echo "<script>window.location.href = 'manage-students.php'</script>";
+    echo "<script>window.location.href = 'manage-Lec.php'</script>";
   }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Student Management System || Manage Students</title>
+  <title>Student Enrollment System || Manage lecturers</title>
   <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
   <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -35,11 +35,11 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
     <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-          <h3 class="page-title"> Manage Students </h3>
+          <h3 class="page-title"> Manage Lecturers </h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-              <li class="breadcrumb-item active" aria-current="page"> Manage Students</li>
+              <li class="breadcrumb-item active" aria-current="page"> Manage Lecturers</li>
             </ol>
           </nav>
         </div>
@@ -48,19 +48,20 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
             <div class="card">
               <div class="card-body">
                 <div class="d-sm-flex align-items-center mb-4">
-                  <h4 class="card-title mb-sm-0">Manage Students</h4>
-                  <a href="#" class="text-dark ml-auto mb-3 mb-sm-0"> View all Students</a>
+                  <h4 class="card-title mb-sm-0">Manage Lecturers</h4>
+                  <a href="#" class="text-dark ml-auto mb-3 mb-sm-0"> View all Lecturers</a>
                 </div>
                 <div class="table-responsive border rounded p-1">
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>S.No</th>
-                        <th>Student ID</th>
-                        <th>Student Name</th>
+                        <th>L.No</th>
+                        <th>Lecturer ID</th>
+                        <th>Lecturer FistName</th>
+                        <th>Lecturer LastName</th>
                         <th>Contact Number</th>
-                        <th>Date Registered</th>
-                        <th>Date Graduated</th>
+                        <th>Email</th>  
+                        <th>Department</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -73,13 +74,13 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                       $next_page = $page_no + 1;
                       $adjacents = "2";
 
-                      $query1 = $dbh->prepare("SELECT COUNT(*) as total FROM student_info");
+                      $query1 = $dbh->prepare("SELECT COUNT(*) as total FROM lecturer");
                       $query1->execute();
                       $total_records = $query1->fetch(PDO::FETCH_OBJ)->total;
                       $total_no_of_pages = ceil($total_records / $total_records_per_page);
                       $second_last = $total_no_of_pages - 1;
 
-                      $sql = "SELECT * FROM student_info LIMIT $offset, $total_records_per_page";
+                      $sql = "SELECT * FROM lecturer LIMIT $offset, $total_records_per_page";
                       $query = $dbh->prepare($sql);
                       $query->execute();
                       $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -89,14 +90,15 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                       ?>
                       <tr>
                         <td><?php echo htmlentities($cnt); ?></td>
-                        <td><?php echo htmlentities($row->Student_ID); ?></td>
-                        <td><?php echo htmlentities($row->Student_Name); ?></td>
-                        <td><?php echo htmlentities($row->Student_Contact_Number); ?></td>
-                        <td><?php echo htmlentities($row->Date_Registered); ?></td>
-                        <td><?php echo htmlentities($row->Date_Graduated); ?></td>
+                        <td><?php echo htmlentities($row->lecturer_id); ?></td>
+                        <td><?php echo htmlentities($row->first_name); ?></td>
+                        <td><?php echo htmlentities($row->last_name); ?></td>
+                        <td><?php echo htmlentities($row->Contact_Num); ?></td>
+                        <td><?php echo htmlentities($row->email); ?></td>
+                        <td><?php echo htmlentities($row->department); ?></td>
                         <td>
-                          <a href="edit-student-detail.php?editid=<?php echo htmlentities($row->Student_ID); ?>" class="btn btn-info btn-xs" target="_blank">Edit</a>
-                          <a href="manage-students.php?delid=<?php echo htmlentities($row->Student_ID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-xs">Delete</a>
+                          <a href="edit-Lec.php?editid=<?php echo htmlentities($row->lecturer_id); ?>" class="btn btn-info btn-xs" target="_blank">Edit</a>
+                          <a href="manage-Lec.php?delid=<?php echo htmlentities($row->lecturer_id); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-xs">Delete</a>
                         </td>
                       </tr>
                       <?php $cnt++; }} ?>

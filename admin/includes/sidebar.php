@@ -46,6 +46,19 @@
     </li>
 
     <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#LecMenu" aria-expanded="false" aria-controls="LecMenu">
+        <span class="menu-title">Lecturers</span>
+        <i class="icon-people menu-icon"></i>
+      </a>
+      <div class="collapse" id="LecMenu">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" href="add-Lec.php">Add lecturer</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-Lec.php">Manage lecturer</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#studentMenu" aria-expanded="false" aria-controls="studentMenu">
         <span class="menu-title">Students</span>
         <i class="icon-people menu-icon"></i>
