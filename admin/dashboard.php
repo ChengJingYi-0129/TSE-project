@@ -11,7 +11,7 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Student Management System | Dashboard</title>
+    <title>Student Enrollment Management | Dashboard</title>
     <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
     <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -72,24 +72,6 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
                                         </div>
                                     </div>
 
-                                    <!-- Total Courses -->
-                                    <div class="col-md-6 col-xl report-inner-card">
-                                        <div class="inner-card-text">
-                                            <?php
-                                            $sql = "SELECT COUNT(*) FROM course";
-                                            $query = $dbh->prepare($sql);
-                                            $query->execute();
-                                            $totalCourses = $query->fetchColumn();
-                                            ?>
-                                            <span class="report-title">Total Courses</span>
-                                            <h4><?= htmlentities($totalCourses); ?></h4>
-                                            <a href="manage-course.php"><span class="report-count">View Courses</span></a>
-                                        </div>
-                                        <div class="inner-card-icon bg-success">
-                                            <i class="icon-book-open"></i>
-                                        </div>
-                                    </div>
-
                                     <!-- Total Enrollments -->
                                     <div class="col-md-6 col-xl report-inner-card">
                                         <div class="inner-card-text">
@@ -119,7 +101,7 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
                                             ?>
                                             <span class="report-title">Total Subjects</span>
                                             <h4><?= htmlentities($totalSubjects); ?></h4>
-                                            <a href="manage-subjects.php"><span class="report-count">View Subjects</span></a>
+                                            <a href="manage-subject.php"><span class="report-count">View Subjects</span></a>
                                         </div>
                                         <div class="inner-card-icon bg-danger">
                                             <i class="icon-layers"></i>

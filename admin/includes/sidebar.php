@@ -33,14 +33,14 @@
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#classMenu" aria-expanded="false" aria-controls="classMenu">
-        <span class="menu-title">Class</span>
+      <a class="nav-link" data-toggle="collapse" href="#subjectMenu" aria-expanded="false" aria-controls="subjectMenu">
+        <span class="menu-title">Subject</span>
         <i class="icon-layers menu-icon"></i>
       </a>
-      <div class="collapse" id="classMenu">
+      <div class="collapse" id="subjectMenu">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"><a class="nav-link" href="add-class.php">Add Class</a></li>
-          <li class="nav-item"><a class="nav-link" href="manage-class.php">Manage Class</a></li>
+          <li class="nav-item"><a class="nav-link" href="add-subject.php">Add Subject</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-subject.php">Manage Subject</a></li>
         </ul>
       </div>
     </li>
