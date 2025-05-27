@@ -66,6 +66,9 @@ function ShoppingCart() {
     document.getElementById("ShoppingCart").style.display="block";
     fetch ('GetSubject.php')
     .then(response => response.json())
+    .then (data=>{
+        subjectTable = data;
+    });
     document.getElementById("ShoppingCart").innerHTML="Shopping Cart";
 }
 
