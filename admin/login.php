@@ -3,46 +3,72 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 
-if(isset($_POST['login'])) 
-  {
-    $username=$_POST['username'];
-    $password=md5($_POST['password']);
-    $sql ="SELECT Admin_ID FROM admin WHERE Admin_name=:username and Admin_pass=:password";
-    $query=$dbh->prepare($sql);
-    $query-> bindParam(':username', $username, PDO::PARAM_STR);
-    $query-> bindParam(':password', $password, PDO::PARAM_STR);
-    $query-> execute();
-    $results=$query->fetchAll(PDO::FETCH_OBJ);
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
 
-  if($query->rowCount() > 0)
-  {
-    foreach ($results as $result) {
-    $_SESSION['sturecmsaid']=$result->Admin_ID;
-    }
+    // Try Admin login
+    $sql = "SELECT Admin_ID FROM admin WHERE Admin_name=:username and Admin_pass=:password";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':username', $username, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
 
-    if(!empty($_POST["remember"])) {
-      //COOKIES for username
-      setcookie ("user_login",$_POST["username"],time()+ (10 * 365 * 24 * 60 * 60));
-      //COOKIES for password
-      setcookie ("userpassword",$_POST["password"],time()+ (10 * 365 * 24 * 60 * 60));
-    } else {
-      if(isset($_COOKIE["user_login"])) {
-        setcookie ("user_login","");
-        if(isset($_COOKIE["userpassword"])) {
-          setcookie ("userpassword","");
+    if ($query->rowCount() > 0) {
+        foreach ($results as $result) {
+            $_SESSION['sturecmsaid'] = $result->Admin_ID;
+            $_SESSION['role'] = 'admin';
         }
-      }
-    }
-    
-    $_SESSION['login']=$_POST['username'];
-    
-    echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
-  }else{
-    echo "<script>alert('Invalid Details');</script>";
-  }
-  }
 
+        if (!empty($_POST["remember"])) {
+            setcookie("user_login", $_POST["username"], time() + (10 * 365 * 24 * 60 * 60));
+            setcookie("userpassword", $_POST["password"], time() + (10 * 365 * 24 * 60 * 60));
+        } else {
+            if (isset($_COOKIE["user_login"])) {
+                setcookie("user_login", "");
+                setcookie("userpassword", "");
+            }
+        }
+
+        $_SESSION['login'] = $_POST['username'];
+        echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
+        exit();
+    }
+
+    // Try Lecturer login
+    $sql_lect = "SELECT lecturer_id FROM lecturer WHERE lecturer_id=:username AND Pass=:password";
+    $query_lect = $dbh->prepare($sql_lect);
+    $query_lect->bindParam(':username', $username, PDO::PARAM_STR);
+    $query_lect->bindParam(':password', $password, PDO::PARAM_STR);
+    $query_lect->execute();
+    $results_lect = $query_lect->fetchAll(PDO::FETCH_OBJ);
+
+    if ($query_lect->rowCount() > 0) {
+        foreach ($results_lect as $result_lect) {
+            $_SESSION['sturecmsaid'] = $result_lect->lecturer_id;
+            $_SESSION['role'] = 'lecturer';
+        }
+
+        if (!empty($_POST["remember"])) {
+            setcookie("user_login", $_POST["username"], time() + (10 * 365 * 24 * 60 * 60));
+            setcookie("userpassword", $_POST["password"], time() + (10 * 365 * 24 * 60 * 60));
+        } else {
+            if (isset($_COOKIE["user_login"])) {
+                setcookie("user_login", "");
+                setcookie("userpassword", "");
+            }
+        }
+
+        $_SESSION['login'] = $_POST['username'];
+        echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
+        exit();
+    }
+
+    echo "<script>alert('Invalid Details');</script>";
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>

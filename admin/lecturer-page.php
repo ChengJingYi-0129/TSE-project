@@ -7,8 +7,6 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
     header('Location: logout.php');
     exit();
 }
-
-$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +36,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
 
                                 <div class="row report-inner-cards-wrapper">
 
-                                    <?php if ($role === 'admin') { ?>
                                     <!-- Total Students -->
                                     <div class="col-md-6 col-xl report-inner-card">
                                         <div class="inner-card-text">
@@ -57,21 +54,39 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
                                         </div>
                                     </div>
 
-                                    <!-- Total Lecturers -->
+                                    <!-- Total Lecturer -->
                                     <div class="col-md-6 col-xl report-inner-card">
                                         <div class="inner-card-text">
                                             <?php
                                             $sql = "SELECT COUNT(*) FROM lecturer";
                                             $query = $dbh->prepare($sql);
                                             $query->execute();
-                                            $totalLecturers = $query->fetchColumn();
+                                            $totalStudents = $query->fetchColumn();
                                             ?>
                                             <span class="report-title">Total Lecturers</span>
-                                            <h4><?= htmlentities($totalLecturers); ?></h4>
+                                            <h4><?= htmlentities($totalStudents); ?></h4>
                                             <a href="manage-Lec.php"><span class="report-count">View Lecturers</span></a>
                                         </div>
                                         <div class="inner-card-icon bg-info">
                                             <i class="icon-user"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Total Enrollments -->
+                                    <div class="col-md-6 col-xl report-inner-card">
+                                        <div class="inner-card-text">
+                                            <?php
+                                            $sql = "SELECT COUNT(*) FROM enrollment";
+                                            $query = $dbh->prepare($sql);
+                                            $query->execute();
+                                            $totalEnrollments = $query->fetchColumn();
+                                            ?>
+                                            <span class="report-title">Total Enrollments</span>
+                                            <h4><?= htmlentities($totalEnrollments); ?></h4>
+                                            <a href="manage-enrollments.php"><span class="report-count">View Enrollments</span></a>
+                                        </div>
+                                        <div class="inner-card-icon bg-warning">
+                                            <i class="icon-doc"></i>
                                         </div>
                                     </div>
 
@@ -92,25 +107,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
                                             <i class="icon-layers"></i>
                                         </div>
                                     </div>
-                                    <?php } ?>
-
-                                    <!-- Total Enrollments (all users) -->
-                                    <div class="col-md-6 col-xl report-inner-card">
-                                        <div class="inner-card-text">
-                                            <?php
-                                            $sql = "SELECT COUNT(*) FROM enrollment";
-                                            $query = $dbh->prepare($sql);
-                                            $query->execute();
-                                            $totalEnrollments = $query->fetchColumn();
-                                            ?>
-                                            <span class="report-title">Total Enrollments</span>
-                                            <h4><?= htmlentities($totalEnrollments); ?></h4>
-                                            <a href="manage-enrollments.php"><span class="report-count">View Enrollments</span></a>
-                                        </div>
-                                        <div class="inner-card-icon bg-warning">
-                                            <i class="icon-doc"></i>
-                                        </div>
-                                    </div>
 
                                 </div> <!-- end row -->
                             </div>
@@ -122,6 +118,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
         </div>
     </div>
 </div>
+
 <script src="vendors/js/vendor.bundle.base.js"></script>
 <script src="js/off-canvas.js"></script>
 <script src="js/misc.js"></script>

@@ -1,3 +1,6 @@
+<?php
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
+?>
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item nav-profile">
@@ -7,17 +10,25 @@
           <div class="dot-indicator bg-success"></div>
         </div>
         <div class="text-wrapper">
-          <?php
-          $aid = $_SESSION['sturecmsaid'];
-          $sql = "SELECT * FROM admin WHERE Admin_ID = :aid";
-          $query = $dbh->prepare($sql);
-          $query->bindParam(':aid', $aid, PDO::PARAM_INT);
-          $query->execute();
-          $admin = $query->fetch(PDO::FETCH_OBJ);
-          ?>
-          <p class="profile-name"><?= htmlentities($admin->Admin_name); ?></p>
-          <p class="designation">Administrator</p>
-        </div>
+  <?php
+  $aid = $_SESSION['sturecmsaid'];
+  $role = $_SESSION['role'];
+
+  if ($role === 'admin') {
+      $sql = "SELECT Admin_name AS display_name FROM admin WHERE Admin_ID = :aid";
+  } else {
+      $sql = "SELECT CONCAT(first_name, ' ', last_name) AS display_name FROM lecturer WHERE lecturer_id = :aid";
+  }
+
+  $query = $dbh->prepare($sql);
+  $query->bindParam(':aid', $aid, PDO::PARAM_STR);
+  $query->execute();
+  $user = $query->fetch(PDO::FETCH_OBJ);
+  ?>
+  <p class="profile-name"><?= htmlentities($user->display_name); ?></p>
+  <p class="designation"><?= ucfirst($role); ?></p>
+</div>
+
       </a>
     </li>
 
@@ -32,6 +43,8 @@
       </a>
     </li>
 
+    <?php if ($role === 'admin') { ?>
+    <!-- Admin-only menus -->
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#subjectMenu" aria-expanded="false" aria-controls="subjectMenu">
         <span class="menu-title">Subject</span>
@@ -52,8 +65,8 @@
       </a>
       <div class="collapse" id="LecMenu">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"><a class="nav-link" href="add-Lec.php">Add lecturer</a></li>
-          <li class="nav-item"><a class="nav-link" href="manage-Lec.php">Manage lecturer</a></li>
+          <li class="nav-item"><a class="nav-link" href="add-Lec.php">Add Lecturer</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-Lec.php">Manage Lecturer</a></li>
         </ul>
       </div>
     </li>
@@ -70,7 +83,23 @@
         </ul>
       </div>
     </li>
+    <?php } ?>
 
+    <!-- Shared menus -->
+    <li class="nav-item">
+      <a class="nav-link" href="manage-enrollments.php">
+        <span class="menu-title">Enrollments</span>
+        <i class="icon-doc menu-icon"></i>
+      </a>
+    </li>
+<?php if ($role === 'lecturer') { ?>
+    <li class="nav-item">
+      <a class="nav-link" href="manage-timetable.php">
+        <span class="menu-title">Timetable</span>
+        <i class="icon-calendar menu-icon"></i>
+      </a>
+    </li>
+<?php } ?>
     <li class="nav-item">
       <a class="nav-link" href="search.php">
         <span class="menu-title">Search</span>

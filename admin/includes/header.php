@@ -10,28 +10,35 @@
 
   <?php
   $aid = $_SESSION['sturecmsaid'];
-  $sql = "SELECT * FROM admin WHERE Admin_ID = :aid";
+  $role = $_SESSION['role'];
+
+  if ($role === 'admin') {
+      $sql = "SELECT Admin_name AS display_name, 'admin@example.com' AS email FROM admin WHERE Admin_ID = :aid";
+  } else {
+      $sql = "SELECT CONCAT(first_name, ' ', last_name) AS display_name, email FROM lecturer WHERE lecturer_id = :aid";
+  }
+
   $query = $dbh->prepare($sql);
-  $query->bindParam(':aid', $aid, PDO::PARAM_INT);
+  $query->bindParam(':aid', $aid, PDO::PARAM_STR);
   $query->execute();
-  $admin = $query->fetch(PDO::FETCH_OBJ);
+  $user = $query->fetch(PDO::FETCH_OBJ);
   ?>
 
   <div class="navbar-menu-wrapper d-flex align-items-center flex-grow-1">
     <h5 class="mb-0 font-weight-medium d-none d-lg-flex">
-      <?= htmlentities($admin->Admin_name); ?>, Welcome to Dashboard!
+      <?= htmlentities($user->display_name); ?>, Welcome to Dashboard!
     </h5>
     <ul class="navbar-nav navbar-nav-right ml-auto">
       <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
           <img class="img-xs rounded-circle ml-2" src="images/faces/face8.jpg" alt="Profile image">
-          <span class="font-weight-normal"><?= htmlentities($admin->Admin_name); ?></span>
+          <span class="font-weight-normal"><?= htmlentities($user->display_name); ?></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
           <div class="dropdown-header text-center">
             <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
-            <p class="mb-1 mt-3"><?= htmlentities($admin->Admin_name); ?></p>
-            <p class="font-weight-light text-muted mb-0">admin@example.com</p> <!-- Optional -->
+            <p class="mb-1 mt-3"><?= htmlentities($user->display_name); ?></p>
+            <p class="font-weight-light text-muted mb-0"><?= htmlentities($user->email); ?></p>
           </div>
           <a class="dropdown-item" href="profile.php"><i class="dropdown-item-icon icon-user text-primary"></i> My Profile</a>
           <a class="dropdown-item" href="change-password.php"><i class="dropdown-item-icon icon-energy text-primary"></i> Setting</a>

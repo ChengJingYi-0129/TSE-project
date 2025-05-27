@@ -37,7 +37,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Student Management System || Add Subject</title>
+    <title>Student Enrollment Management || Add Subject</title>
     <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="css/style.css" />
