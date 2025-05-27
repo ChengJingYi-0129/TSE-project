@@ -18,10 +18,9 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $graded = $_POST['graded'];
         $prereq = $_POST['prereq'] != '' ? $_POST['prereq'] : null;  // 空值转为 null
         $elective = $_POST['elective'];
-        $group = $_POST['elective_group'];
 
-        $sql = "INSERT INTO subject (Subject_Code, Subject_Name, Subject_Credit_Hours, Graded, Prerequirement_Subject_Code, elective, Elective_Group)
-                VALUES (:code, :name, :credit, :graded, :prereq, :elective, :group)";
+        $sql = "INSERT INTO subject (Subject_Code, Subject_Name, Subject_Credit_Hours, Graded, Prerequirement_Subject_Code, elective)
+                VALUES (:code, :name, :credit, :graded, :prereq, :elective)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':code', $code, PDO::PARAM_STR);
         $query->bindParam(':name', $name, PDO::PARAM_STR);
@@ -29,7 +28,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $query->bindParam(':graded', $graded, PDO::PARAM_INT);
         $query->bindParam(':prereq', $prereq, PDO::PARAM_STR);
         $query->bindParam(':elective', $elective, PDO::PARAM_INT);
-        $query->bindParam(':group', $group, PDO::PARAM_INT);
 
         $query->execute();
         echo '<script>alert("Subject has been added.")</script>';
@@ -104,10 +102,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Elective Group</label>
-                                        <input type="number" name="elective_group" class="form-control" min="1">
                                     </div>
                                     <button type="submit" name="submit" class="btn btn-primary mr-2">Add</button>
                                 </form>

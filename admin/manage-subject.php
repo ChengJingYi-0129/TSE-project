@@ -59,7 +59,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                                                     <th>Credit Hours</th>
                                                     <th>Graded</th>
                                                     <th>Elective</th>
-                                                    <th>Elective Group</th>  
                                                     <th>Prerequisite</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -92,7 +91,6 @@ if ($query->rowCount() > 0) {
     <td><?php echo htmlentities($row->Subject_Credit_Hours); ?></td>
     <td><?php echo $row->Graded ? 'Yes' : 'No'; ?></td>
     <td><?php echo $row->elective ? 'Yes' : 'No'; ?></td>
-    <td><?php echo htmlentities($row->Elective_Group); ?></td>
     <td><?php echo $row->Prerequirement_Subject_Code ? htmlentities($row->Prerequirement_Subject_Code) : 'None'; ?></td>
 
     <td>

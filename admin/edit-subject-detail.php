@@ -13,7 +13,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $graded = $_POST['graded'];
         $prereq = $_POST['prereq'] ?: NULL; // allow NULL if none selected
         $elective = $_POST['elective'];
-        $group = $_POST['elective_group'];
 
         $sql = "UPDATE subject 
                 SET Subject_Name = :subject_name, 
@@ -21,7 +20,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                     Graded = :graded, 
                     Prerequirement_Subject_Code = :prereq, 
                     elective = :elective, 
-                    Elective_Group = :group 
                 WHERE Subject_Code = :subject_code";
         $query = $dbh->prepare($sql);
         $query->bindParam(':subject_name', $subject_name, PDO::PARAM_STR);
@@ -29,7 +27,6 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $query->bindParam(':graded', $graded, PDO::PARAM_INT);
         $query->bindParam(':prereq', $prereq, PDO::PARAM_STR);
         $query->bindParam(':elective', $elective, PDO::PARAM_INT);
-        $query->bindParam(':group', $group, PDO::PARAM_INT);
         $query->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
         $query->execute();
 
@@ -124,10 +121,7 @@ if ($query->rowCount() > 0) {
                                             <option value="0">No</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Elective Group</label>
-                                        <input type="number" name="elective_group" value="<?php echo htmlentities($row->Elective_Group); ?>" class="form-control" min="1">
-                                    </div>
+                                    
 <?php } } ?>
                                     <button type="submit" name="submit" class="btn btn-primary mr-2">Update</button>
                                 </form>
