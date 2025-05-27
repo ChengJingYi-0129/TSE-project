@@ -60,6 +60,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                                                     <th>Graded</th>
                                                     <th>Elective</th>
                                                     <th>Elective Group</th>  
+                                                    <th>Prerequisite</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -92,6 +93,8 @@ if ($query->rowCount() > 0) {
     <td><?php echo $row->Graded ? 'Yes' : 'No'; ?></td>
     <td><?php echo $row->elective ? 'Yes' : 'No'; ?></td>
     <td><?php echo htmlentities($row->Elective_Group); ?></td>
+    <td><?php echo $row->Prerequirement_Subject_Code ? htmlentities($row->Prerequirement_Subject_Code) : 'None'; ?></td>
+
     <td>
         <a href="edit-subject-detail.php?editid=<?php echo htmlentities($row->Subject_Code); ?>" class="btn btn-info btn-xs">Edit</a>
         <a href="manage-subject.php?delid=<?php echo htmlentities($row->Subject_Code); ?>" onclick="return confirm('Are you sure you want to delete this subject?');" class="btn btn-danger btn-xs">Delete</a>
