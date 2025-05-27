@@ -6,12 +6,17 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['sturecmsaid'] == 0)) {
     header('location:logout.php');
 } else {
+    // 拉出所有 subject 列表，用来填充下拉菜单
+    $subjectQuery = $dbh->prepare("SELECT Subject_Code, Subject_Name FROM subject");
+    $subjectQuery->execute();
+    $subjects = $subjectQuery->fetchAll(PDO::FETCH_ASSOC);
+
     if (isset($_POST['submit'])) {
         $code = $_POST['subject_code'];
         $name = $_POST['subject_name'];
         $credit = $_POST['credit_hours'];
         $graded = $_POST['graded'];
-        $prereq = $_POST['prereq'];
+        $prereq = $_POST['prereq'] != '' ? $_POST['prereq'] : null;  // 空值转为 null
         $elective = $_POST['elective'];
         $group = $_POST['elective_group'];
 
@@ -83,7 +88,14 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                                     </div>
                                     <div class="form-group">
                                         <label>Prerequirement Subject Code</label>
-                                        <input type="text" name="prereq" class="form-control">
+                                        <select name="prereq" class="form-control">
+                                            <option value="">-- None --</option>
+                                            <?php foreach ($subjects as $subject) { ?>
+                                                <option value="<?php echo $subject['Subject_Code']; ?>">
+                                                    <?php echo $subject['Subject_Code'] . " - " . $subject['Subject_Name']; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Is Elective?</label>

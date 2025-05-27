@@ -11,7 +11,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $subject_name = $_POST['subject_name'];
         $credit_hours = $_POST['credit_hours'];
         $graded = $_POST['graded'];
-        $prereq = $_POST['prereq'];
+        $prereq = $_POST['prereq'] ?: NULL; // allow NULL if none selected
         $elective = $_POST['elective'];
         $group = $_POST['elective_group'];
 
@@ -101,7 +101,20 @@ if ($query->rowCount() > 0) {
                                     </div>
                                     <div class="form-group">
                                         <label>Prerequirement Subject Code</label>
-                                        <input type="text" name="prereq" value="<?php echo htmlentities($row->Prerequirement_Subject_Code); ?>" class="form-control">
+                                        <select name="prereq" class="form-control">
+                                            <option value="">-- None --</option>
+                                            <?php
+                                            $sql2 = "SELECT Subject_Code, Subject_Name FROM subject WHERE Subject_Code != :current_code";
+                                            $stmt = $dbh->prepare($sql2);
+                                            $stmt->bindParam(':current_code', $row->Subject_Code, PDO::PARAM_STR);
+                                            $stmt->execute();
+                                            $subjects = $stmt->fetchAll(PDO::FETCH_OBJ);
+                                            foreach ($subjects as $subj) {
+                                                $selected = ($subj->Subject_Code == $row->Prerequirement_Subject_Code) ? 'selected' : '';
+                                                echo "<option value=\"{$subj->Subject_Code}\" $selected>{$subj->Subject_Code} - {$subj->Subject_Name}</option>";
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Is Elective?</label>
