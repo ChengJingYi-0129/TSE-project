@@ -67,9 +67,20 @@ function ShoppingCart() {
     fetch ('GetSubject.php')
     .then(response => response.json())
     .then (data=>{
-        subjectTable = data;
+        subjectCode=data.Subject_Code;
+        subjectName=data.Subject_Name;
+        subjectCreditHours=data.Subject_Credit_Hours;
     });
-    document.getElementById("ShoppingCart").innerHTML="Shopping Cart";
+    let cart="<h1>Shopping Cart</h1> <h2>Subject</h2>";
+    for (let i = 0; i < subjectCode.length; i++) {
+    html += "<div class='mb-3 mt-3'>" +
+        subjectCode[i] + " " + subjectName[i] + " " + subjectCreditHours[i] + " Credit Hours" +
+        "<input type='button' class='btn btn-primary' value='Add to Cart' onclick='addToCart(\"" + subjectCode[i] + "\",\"" + subjectName[i] + "\")'>" +
+        "<input type='button' class='btn btn-danger' value='Remove from Cart' onclick='removeFromCart(\"" + subjectCode[i] + "\",\"" + subjectName[i] + "\")'>" +
+        "</div>";
+}
+
+    document.getElementById("ShoppingCart").innerHTML=cart;
 }
 
 function ClassSearchAndEnroll() {
