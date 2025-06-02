@@ -2,7 +2,7 @@
 session_start();
 include('includes/dbconnection.php');
 
-// 安全检查
+
 if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
     header('Location: logout.php');
     exit();

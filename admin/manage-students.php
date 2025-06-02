@@ -58,6 +58,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                         <th>S.No</th>
                         <th>Student ID</th>
                         <th>Student Name</th>
+                        <th>Faculty</th>
                         <th>Contact Number</th>
                         <th>Date Registered</th>
                         <th>Date Graduated</th>
@@ -91,6 +92,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                         <td><?php echo htmlentities($cnt); ?></td>
                         <td><?php echo htmlentities($row->Student_ID); ?></td>
                         <td><?php echo htmlentities($row->Student_Name); ?></td>
+                        <td><?php echo htmlentities($row->faculty_id); ?></td>
                         <td><?php echo htmlentities($row->Student_Contact_Number); ?></td>
                         <td><?php echo htmlentities($row->Date_Registered); ?></td>
                         <td><?php echo htmlentities($row->Date_Graduated); ?></td>

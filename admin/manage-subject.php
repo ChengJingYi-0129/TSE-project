@@ -56,6 +56,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                                                     <th>S.No</th>
                                                     <th>Subject Code</th>
                                                     <th>Subject Name</th>
+                                                    <th>Faculty</th>
                                                     <th>Credit Hours</th>
                                                     <th>Graded</th>
                                                     <th>Elective</th>
@@ -88,6 +89,7 @@ if ($query->rowCount() > 0) {
     <td><?php echo htmlentities($cnt); ?></td>
     <td><?php echo htmlentities($row->Subject_Code); ?></td>
     <td><?php echo htmlentities($row->Subject_Name); ?></td>
+    <td><?php echo htmlentities($row->faculty_id); ?></td>
     <td><?php echo htmlentities($row->Subject_Credit_Hours); ?></td>
     <td><?php echo $row->Graded ? 'Yes' : 'No'; ?></td>
     <td><?php echo $row->elective ? 'Yes' : 'No'; ?></td>

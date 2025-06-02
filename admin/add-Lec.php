@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
     $password = password_hash($_POST['Pass'], PASSWORD_DEFAULT);
     $contact = $_POST['Contact_Num'];
     $email = $_POST['email'];
-    $department = $_POST['department'];
+    $faculty_id = $_POST['faculty_id'];
 
     $check = $dbh->prepare("SELECT lecturer_id FROM lecturer WHERE lecturer_id = :id");
     $check->bindParam(':id', $id, PDO::PARAM_STR);
@@ -23,8 +23,8 @@ if (isset($_POST['submit'])) {
     if ($check->rowCount() > 0) {
         echo "<script>alert('Lecturer ID already exists');</script>";
     } else {
-        $sql = "INSERT INTO lecturer (lecturer_ID, first_name, last_name, Pass, Contact_Num, email, department)
-                VALUES (:id, :fname, :lname, :password, :contact, :email, :department)";
+        $sql = "INSERT INTO lecturer (lecturer_ID, first_name, last_name, Pass, Contact_Num, email, faculty_id)
+                VALUES (:id, :fname, :lname, :password, :contact, :email, :faculty_id)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':id', $id, PDO::PARAM_STR);
         $query->bindParam(':fname', $fname, PDO::PARAM_STR);
@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
         $query->bindParam(':password', $password, PDO::PARAM_STR);
         $query->bindParam(':contact', $contact, PDO::PARAM_STR);
         $query->bindParam(':email', $email, PDO::PARAM_STR);
-        $query->bindParam(':department', $department, PDO::PARAM_STR);
+        $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_STR);
 
         if ($query->execute()) {
             echo "<script>alert('Lecturer added successfully');</script>";
@@ -102,8 +102,18 @@ if (isset($_POST['submit'])) {
                                         <input type="email" name="email" class="form-control" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Department</label>
-                                        <input type="text" name="department" class="form-control" required>
+                                        <label>Faculty</label>
+                                        <select name="faculty_id" class="form-control" required>
+                                            <?php
+                                            $sql = "SELECT * FROM faculty";
+                                            $query = $dbh->prepare($sql);
+                                            $query->execute();
+                                            $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                            foreach ($results as $result) {
+                                                echo "<option value='" . htmlentities($result->faculty_id) . "'>" . htmlentities($result->faculty_name) . "</option>";
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                     <button type="submit" name="submit" class="btn btn-primary mr-2">Add Lecturer</button>
                                 </form>

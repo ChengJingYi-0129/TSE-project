@@ -2,21 +2,31 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+
 if (strlen($_SESSION['sturecmsaid'] == 0)) {
   header('location:logout.php');
 } else {
   if (isset($_POST['submit'])) {
     $lecname = $_POST['lecname'];
-    $lecid = $_POST['lecid'];
+    $lecid = $_POST['lecid']; 
+    $lastname = $_POST['lastname'];
+    $email = $_POST['email'];
     $connum = $_POST['connum'];
-    $eid = $_GET['editid'];
+    $faculty_id = $_POST['faculty_id'];
 
-    $sql = "UPDATE lecturer SET first_name=:lecname, Contact_Num=:connum WHERE lecturer_id=:eid";
+    $sql = "UPDATE lecturer 
+            SET first_name=:lecname, last_name=:lastname, email=:email, 
+                Contact_Num=:connum, faculty_id=:faculty_id 
+            WHERE lecturer_id=:lecid";
     $query = $dbh->prepare($sql);
     $query->bindParam(':lecname', $lecname, PDO::PARAM_STR);
+    $query->bindParam(':lastname', $lastname, PDO::PARAM_STR);
+    $query->bindParam(':email', $email, PDO::PARAM_STR);
     $query->bindParam(':connum', $connum, PDO::PARAM_STR);
-    $query->bindParam(':eid', $eid, PDO::PARAM_STR);
+    $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_STR);
+    $query->bindParam(':lecid', $lecid, PDO::PARAM_STR);
     $query->execute();
+
     echo '<script>alert("Lecturer has been updated")</script>';
   }
 ?>
@@ -59,17 +69,42 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                     foreach ($results as $row) {
                   ?>
                   <div class="form-group">
-                    <label>Lecturer Name</label>
+                    <label>First Name</label>
                     <input type="text" name="lecname" value="<?php echo htmlentities($row->first_name); ?>" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="lastname" value="<?php echo htmlentities($row->last_name); ?>" class="form-control">
                   </div>
                   <div class="form-group">
                     <label>Lecturer ID</label>
                     <input type="text" name="lecid" value="<?php echo htmlentities($row->lecturer_id); ?>" class="form-control" readonly>
                   </div>
                   <div class="form-group">
+                    <label>Faculty</label>
+                    <select name="faculty_id" class="form-control" required>
+                      <option value="">-- Select Faculty --</option>
+                      <?php
+                        $sql = "SELECT * FROM faculty";
+                        $query = $dbh->prepare($sql);
+                        $query->execute();
+                        $faculties = $query->fetchAll(PDO::FETCH_OBJ);
+                        foreach ($faculties as $f) {
+                          $selected = ($row->faculty_id == $f->faculty_id) ? "selected" : "";
+                          echo "<option value='" . htmlentities($f->faculty_id) . "' $selected>" . htmlentities($f->faculty_name) . "</option>";
+                        }
+                      ?>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="<?php echo htmlentities($row->email); ?>" class="form-control">
+                  </div>
+                  <div class="form-group">
                     <label>Contact Number</label>
                     <input type="text" name="connum" value="<?php echo htmlentities($row->Contact_Num); ?>" class="form-control" required maxlength="10">
                   </div>
+                  
                   <?php } } ?>
                   <button type="submit" class="btn btn-primary mr-2" name="submit">Update</button>
                 </form>

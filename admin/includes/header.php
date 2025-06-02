@@ -40,7 +40,9 @@
             <p class="mb-1 mt-3"><?= htmlentities($user->display_name); ?></p>
             <p class="font-weight-light text-muted mb-0"><?= htmlentities($user->email); ?></p>
           </div>
+          <?php if ($role === 'lecturer') { ?>
           <a class="dropdown-item" href="profile.php"><i class="dropdown-item-icon icon-user text-primary"></i> My Profile</a>
+          <?php } ?>
           <a class="dropdown-item" href="change-password.php"><i class="dropdown-item-icon icon-energy text-primary"></i> Setting</a>
           <a class="dropdown-item" href="logout.php"><i class="dropdown-item-icon icon-power text-primary"></i> Sign Out</a>
         </div>

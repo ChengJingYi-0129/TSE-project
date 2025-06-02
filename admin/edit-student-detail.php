@@ -10,15 +10,22 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
     $stuid = $_POST['stuid'];
     $connum = $_POST['connum'];
     $eid = $_GET['editid'];
+    $faculty_id = $_POST['faculty_id'];
 
-    $sql = "UPDATE student_info SET Student_Name=:stuname, Student_Contact_Number=:connum WHERE Student_ID=:eid";
+    $sql = "UPDATE student_info 
+            SET Student_Name=:stuname, 
+                Student_Contact_Number=:connum, 
+                faculty_id=:faculty_id 
+            WHERE Student_ID=:eid";
     $query = $dbh->prepare($sql);
     $query->bindParam(':stuname', $stuname, PDO::PARAM_STR);
     $query->bindParam(':connum', $connum, PDO::PARAM_STR);
+    $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_STR);
     $query->bindParam(':eid', $eid, PDO::PARAM_STR);
     $query->execute();
     echo '<script>alert("Student has been updated")</script>';
   }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +73,22 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                   <div class="form-group">
                     <label>Student ID</label>
                     <input type="text" name="stuid" value="<?php echo htmlentities($row->Student_ID); ?>" class="form-control" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label>Faculty</label>
+                    <select name="faculty_id" class="form-control" required>
+                      <option value="">-- Select Faculty --</option>
+                      <?php
+                        $sql = "SELECT * FROM faculty";
+                        $query = $dbh->prepare($sql);
+                        $query->execute();
+                        $faculties = $query->fetchAll(PDO::FETCH_OBJ);
+                        foreach ($faculties as $f) {
+                          $selected = ($row->faculty_id == $f->faculty_id) ? "selected" : "";
+                          echo "<option value='" . htmlentities($f->faculty_id) . "' $selected>" . htmlentities($f->faculty_name) . "</option>";
+                        }
+                      ?>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label>Contact Number</label>

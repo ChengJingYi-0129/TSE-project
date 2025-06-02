@@ -13,6 +13,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $graded = $_POST['graded'];
         $prereq = $_POST['prereq'] ?: NULL; // allow NULL if none selected
         $elective = $_POST['elective'];
+        $faculty_id = $_POST['faculty_id'];
 
         $sql = "UPDATE subject 
                 SET Subject_Name = :subject_name, 
@@ -20,6 +21,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                     Graded = :graded, 
                     Prerequirement_Subject_Code = :prereq, 
                     elective = :elective, 
+                    faculty_id = :faculty_id
                 WHERE Subject_Code = :subject_code";
         $query = $dbh->prepare($sql);
         $query->bindParam(':subject_name', $subject_name, PDO::PARAM_STR);
@@ -28,6 +30,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $query->bindParam(':prereq', $prereq, PDO::PARAM_STR);
         $query->bindParam(':elective', $elective, PDO::PARAM_INT);
         $query->bindParam(':subject_code', $subject_code, PDO::PARAM_STR);
+        $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_STR);
         $query->execute();
 
         echo '<script>alert("Subject has been updated")</script>';
@@ -83,6 +86,22 @@ if ($query->rowCount() > 0) {
                                     <div class="form-group">
                                         <label>Subject Name</label>
                                         <input type="text" name="subject_name" value="<?php echo htmlentities($row->Subject_Name); ?>" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Faculty</label>
+                                        <select name="faculty_id" class="form-control" required>
+                                        <option value="">-- Select Faculty --</option>
+                                        <?php
+                                            $sql = "SELECT * FROM faculty";
+                                            $query = $dbh->prepare($sql);
+                                            $query->execute();
+                                            $faculties = $query->fetchAll(PDO::FETCH_OBJ);
+                                            foreach ($faculties as $f) {
+                                            $selected = ($row->faculty_id == $f->faculty_id) ? "selected" : "";
+                                                echo "<option value='" . htmlentities($f->faculty_id) . "' $selected>" . htmlentities($f->faculty_name) . "</option>";
+                                            }   
+                                        ?>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Credit Hours</label>

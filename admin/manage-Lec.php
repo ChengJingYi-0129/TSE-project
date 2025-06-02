@@ -61,7 +61,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                         <th>Lecturer LastName</th>
                         <th>Contact Number</th>
                         <th>Email</th>  
-                        <th>Department</th>
+                        <th>Faculty</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -95,7 +95,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
                         <td><?php echo htmlentities($row->last_name); ?></td>
                         <td><?php echo htmlentities($row->Contact_Num); ?></td>
                         <td><?php echo htmlentities($row->email); ?></td>
-                        <td><?php echo htmlentities($row->department); ?></td>
+                        <td><?php echo htmlentities($row->faculty_id); ?></td>
                         <td>
                           <a href="edit-Lec.php?editid=<?php echo htmlentities($row->lecturer_id); ?>" class="btn btn-info btn-xs" target="_blank">Edit</a>
                           <a href="manage-Lec.php?delid=<?php echo htmlentities($row->lecturer_id); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-xs">Delete</a>

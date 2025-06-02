@@ -59,6 +59,19 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
     </li>
 
     <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#scheduleMenu" aria-expanded="false" aria-controls="scheduleMenu">
+        <span class="menu-title">Schedule</span>
+        <i class="icon-layers menu-icon"></i>
+      </a>
+      <div class="collapse" id="scheduleMenu">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" href="add-schedule.php">Add Schedule</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-schedule.php">Manage Schedule</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#LecMenu" aria-expanded="false" aria-controls="LecMenu">
         <span class="menu-title">Lecturers</span>
         <i class="icon-people menu-icon"></i>
@@ -85,7 +98,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
     </li>
     <?php } ?>
 
-    <!-- Shared menus -->
     <li class="nav-item">
       <a class="nav-link" href="manage-enrollments.php">
         <span class="menu-title">Enrollments</span>
@@ -100,11 +112,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
       </a>
     </li>
 <?php } ?>
-    <li class="nav-item">
-      <a class="nav-link" href="search.php">
-        <span class="menu-title">Search</span>
-        <i class="icon-magnifier menu-icon"></i>
-      </a>
-    </li>
+    
   </ul>
 </nav>

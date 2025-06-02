@@ -15,6 +15,7 @@ if (isset($_POST['submit'])) {
     $contact = $_POST['Student_Contact_Number'];
     $regdate = $_POST['Date_Registered'];
     $gradate = $_POST['Date_Graduated'];
+    $faculty_id = $_POST['faculty_id'];
 
     // 检查是否重复
     $check = $dbh->prepare("SELECT Student_ID FROM student_info WHERE Student_ID = :id");
@@ -24,8 +25,8 @@ if (isset($_POST['submit'])) {
     if ($check->rowCount() > 0) {
         echo "<script>alert('Student ID already exists');</script>";
     } else {
-        $sql = "INSERT INTO student_info (Student_ID, Student_Name, Student_Password, Student_Contact_Number, Date_Registered, Date_Graduated)
-                VALUES (:id, :name, :password, :contact, :regdate, :gradate)";
+        $sql = "INSERT INTO student_info (Student_ID, Student_Name, Student_Password, Student_Contact_Number, Date_Registered, Date_Graduated, faculty_id)
+                VALUES (:id, :name, :password, :contact, :regdate, :gradate , :faculty_id)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':id', $id);
         $query->bindParam(':name', $name);
@@ -33,6 +34,8 @@ if (isset($_POST['submit'])) {
         $query->bindParam(':contact', $contact);
         $query->bindParam(':regdate', $regdate);
         $query->bindParam(':gradate', $gradate);
+        $query->bindParam(':faculty_id', $faculty_id);
+        
 
         if ($query->execute()) {
             echo "<script>alert('Student added successfully');</script>";
@@ -83,6 +86,20 @@ if (isset($_POST['submit'])) {
                   <div class="form-group">
                     <label>Student Name</label>
                     <input type="text" name="Student_Name" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Faculty</label>
+                    <select name="faculty_id" class="form-control" required>
+                      <?php
+                      $sql = "SELECT * FROM faculty";
+                      $query = $dbh->prepare($sql);
+                      $query->execute();
+                      $results = $query->fetchAll(PDO::FETCH_OBJ);
+                      foreach ($results as $result) {
+                          echo "<option value='" . htmlentities($result->faculty_id) . "'>" . htmlentities($result->faculty_name) . "</option>";
+                      }
+                      ?>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label>Password</label>
