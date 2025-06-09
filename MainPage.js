@@ -63,24 +63,40 @@ function EAB() { //done
 
 function ShoppingCart() {
     ClearAll();
-    document.getElementById("ShoppingCart").style.display="block";
-    fetch ('GetSubject.php')
-    .then(response => response.json())
-    .then (data=>{
-        subjectCode=data.Subject_Code;
-        subjectName=data.Subject_Name;
-        subjectCreditHours=data.Subject_Credit_Hours;
-    });
-    let cart="<h1>Shopping Cart</h1> <h2>Subject</h2>";
-    for (let i = 0; i < subjectCode.length; i++) {
-    html += "<div class='mb-3 mt-3'>" +
-        subjectCode[i] + " " + subjectName[i] + " " + subjectCreditHours[i] + " Credit Hours" +
-        "<input type='button' class='btn btn-primary' value='Add to Cart' onclick='addToCart(\"" + subjectCode[i] + "\",\"" + subjectName[i] + "\")'>" +
-        "<input type='button' class='btn btn-danger' value='Remove from Cart' onclick='removeFromCart(\"" + subjectCode[i] + "\",\"" + subjectName[i] + "\")'>" +
-        "</div>";
-}
-
-    document.getElementById("ShoppingCart").innerHTML=cart;
+    document.getElementById("ShoppingCart").style.display = "block";
+    
+    fetch('GetSubject.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let cart = "<h1>Shopping Cart</h1><h2>Subject</h2>";
+            
+            if (Array.isArray(data)) {
+                data.forEach(subject => {
+                    cart += `<div class='mb-3 mt-3'>
+                        ${subject.Subject_Code} 
+                        ${subject.Subject_Name} 
+                        ${subject.Subject_Credit_Hours} Credit Hours
+                        <input type='button' class='btn btn-primary' value='Add to Cart' 
+                            onclick='addToCart("${subject.Subject_Code}", "${subject.Subject_Name}")'>
+                        <input type='button' class='btn btn-danger' value='Remove from Cart' 
+                            onclick='removeFromCart("${subject.Subject_Code}", "${subject.Subject_Name}")'>
+                    </div>`;
+                });
+            } else {
+                cart += "<div>No subjects available</div>";
+            }
+            
+            document.getElementById("ShoppingCart").innerHTML = cart;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById("ShoppingCart").innerHTML = "Error loading subjects";
+        });
 }
 
 function ClassSearchAndEnroll() {

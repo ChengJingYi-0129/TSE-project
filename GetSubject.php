@@ -7,7 +7,7 @@ $connection=new mysqli($servername,$username,$password,$dbname);
 if($connection->connect_error){
     die("Connection failed: ".$connection->connect_error);
 }
-$query=$connection->prepare("SELECT * FROM subject");
+$query=$connection->prepare("SELECT Subject_Code, Subject_Name, Subject_Credit_Hours   FROM subject");
 $query->execute();
 $result=$query->get_result();
 $subject = array();
