@@ -45,13 +45,27 @@
             background-color: lightblue;
         }
 
-#OverallContainer {
+.subject-code {
+    margin-right: 20px; /* Add space between Subject Code and Subject Name */
+}
+
+.subject-name {
+    width: 200px; /* Set a fixed width for the Subject Name */
+    margin-right: 50px; /* Add space between Subject Name and Credit Hours */
+    overflow: hidden; /* Ensure it doesn't overflow if the name is too long */
+    text-overflow: ellipsis; /* Add an ellipsis (…) if the text overflows */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.credit-hours {
+    margin-right: 250px;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+#TransparentContainer2{
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     padding: 20px;
     color: white;
-    margin-top:20%;
-    margin-left:50%;
-    transform:translate(-50%, -50%);
     width: 80%;
 }

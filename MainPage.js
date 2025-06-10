@@ -10,6 +10,10 @@ document.getElementById("EnrollByMyRequirementsButton").addEventListener("click"
 document.getElementById("ViewMyClassesButton").addEventListener("click", ViewMyClasses);
 document.getElementById("EnrollmentSummaryButton").addEventListener("click", EnrollmentSummary);
 
+var allSubjectCodes = [];
+var allSubjectNames = [];
+var allSubjectCredits = [];
+
 function ClearAll(){
     document.getElementById("EnrollmentAppointment").style.display="none";
     document.getElementById("ShoppingCart").style.display="none";
@@ -65,38 +69,62 @@ function ShoppingCart() {
     ClearAll();
     document.getElementById("ShoppingCart").style.display = "block";
     
-    fetch('GetSubject.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            let cart = "<h1>Shopping Cart</h1><h2>Subject</h2>";
-            
-            if (Array.isArray(data)) {
-                data.forEach(subject => {
-                    cart += `<div class='mb-3 mt-3'>
-                        ${subject.Subject_Code} 
-                        ${subject.Subject_Name} 
-                        ${subject.Subject_Credit_Hours} Credit Hours
-                        <input type='button' class='btn btn-primary' value='Add to Cart' 
-                            onclick='addToCart("${subject.Subject_Code}", "${subject.Subject_Name}")'>
-                        <input type='button' class='btn btn-danger' value='Remove from Cart' 
-                            onclick='removeFromCart("${subject.Subject_Code}", "${subject.Subject_Name}")'>
-                    </div>`;
-                });
-            } else {
-                cart += "<div>No subjects available</div>";
-            }
-            
-            document.getElementById("ShoppingCart").innerHTML = cart;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById("ShoppingCart").innerHTML = "Error loading subjects";
-        });
+    const xhr= new XMLHttpRequest();
+    xhr.open("GET", "GetSubject.php", true);
+    xhr.onload = function() {
+        const subjects = JSON.parse(xhr.responseText);
+
+        const subjectCodes = subjects.map(subject => subject.Subject_Code);
+        const subjectNames = subjects.map(subject => subject.Subject_Name);
+        const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
+
+        console.log(subjects);
+        console.log(subjectCodes);
+        console.log(subjectNames);
+        console.log(subjectCredits);
+
+        const subjectList = document.getElementById('ShoppingCart');
+        subjectList.innerHTML = ''; // Clear previous content
+         subjects.forEach(subject => {
+                            const subjectDiv = document.createElement('div');
+                            subjectDiv.style.border = '2px solid #ccc'; // Optional: Add a border for better visibility
+                            subjectDiv.classList.add('subject-item'); // Optional: Add a class for styling
+
+                            // Create a paragraph or any other element to display the subject details
+                            const subjectDetails = document.createElement('p');
+                            subjectDetails.innerHTML = `
+                            <span class="subject-code">Subject Code: ${subject.Subject_Code}</span>
+                            <span class="subject-name">${subject.Subject_Name}</span>
+                            <span class="credit-hours">Credit Hours: ${subject.Subject_Credit_Hours}</span>`;
+
+                            // Create a button to add the class
+                            const addButton = document.createElement('button');
+                            addButton.innerHTML = 'Add Class'; // Set the button text
+                            addButton.style.color = 'black';
+                            addButton.addEventListener('click', () => {
+                                // Handle adding the class when clicked
+                                addClass(subject.Subject_Code,subject.Subject_Name,subject.Subject_Credit_Hours); // You can create an `addClass` function to handle this action
+                            });
+
+                            // Append the subject details and button to the subject div
+                            subjectDiv.appendChild(subjectDetails);
+                            subjectDiv.appendChild(addButton);
+
+                            // Append the subject div to the subject list
+                            subjectList.appendChild(subjectDiv);
+                    });
+                };
+                xhr.send();
+}
+
+function addClass(subjectCode, subjectName, subjectCreditHours) {
+    subjectCode = subjectCode.trim();
+    if (allSubjectCodes.includes(subjectCode)) {
+        return; // Class already added, do nothing
+    }
+    allSubjectCodes.push(subjectCode);
+    allSubjectNames.push(subjectName);
+    allSubjectCredits.push(subjectCreditHours);
 }
 
 function ClassSearchAndEnroll() {
@@ -108,7 +136,26 @@ function ClassSearchAndEnroll() {
 function DropClasses() {
     ClearAll();
     document.getElementById("DropClasses").style.display="block";
-    document.getElementById("DropClasses").innerHTML="Drop Classes";
+     document.getElementById("DropClasses").innerHTML="";
+    for (let i = 0; i < allSubjectCodes.length; i++) {
+        const subjectCode = allSubjectCodes[i];
+        const subjectName = allSubjectNames[i];
+        const subjectCreditHours = allSubjectCredits[i];
+        document.getElementById("DropClasses").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
+            <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
+            <span class='subject-name'>Subject Name: ${subjectName}</span><br>
+            <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            <button onclick='removeClass("${subjectCode}")' style='color:black;'>Drop Class</button>
+            </div>`;
+    }
+}
+
+function removeClass(subjectCode) {
+    const index = allSubjectCodes.indexOf(subjectCode);
+    allSubjectCodes.splice(index, 1);
+    allSubjectNames.splice(index, 1);
+    allSubjectCredits.splice(index, 1);
+    DropClasses(); // Refresh the Shopping Cart display
 }
 
 function UpdateClasses() {
@@ -275,3 +322,8 @@ function generateCalendar(month, year) {
 
             container.appendChild(calendarGrid);
         }
+
+
+window.onload = function() {
+    ShoppingCart();
+}

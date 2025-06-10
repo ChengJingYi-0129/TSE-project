@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject List</title>
+    <script>
+        // Function to fetch data using AJAX
+        function fetchSubjects() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'Test.php', true);  // Fetch data from test.php
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Parse the JSON response
+                    const subjects = JSON.parse(xhr.responseText);
+
+                    // Example: Split subjects into separate arrays/lists
+                    const subjectCodes = subjects.map(subject => subject.Subject_Code);
+                    const subjectNames = subjects.map(subject => subject.Subject_Name);
+                    const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
+
+                    console.log(subjects);  // Full data
+                    console.log(subjectCodes);  // Subject codes array
+                    console.log(subjectNames);  // Subject names array
+                    console.log(subjectCredits);  // Subject credits array
+
+                    // Dynamically populate the list on the page
+                    const subjectList = document.getElementById('subject-list');
+                    subjectList.innerHTML = ''; // Clear previous content
+                    subjects.forEach(subject => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${subject.Subject_Code}: ${subject.Subject_Name}, ${subject.Subject_Credit_Hours} Credits`;
+                        subjectList.appendChild(listItem);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        // Fetch subjects when the page loads
+        window.onload = fetchSubjects;
+    </script>
+</head>
+<body>
+    <h1>Subjects List</h1>
+    <ul id="subject-list">
+        <!-- The subjects will be dynamically added here by JavaScript -->
+    </ul>
+</body>
+</html>
