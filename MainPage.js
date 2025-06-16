@@ -162,6 +162,10 @@ function Planner() {
         const subjectNames = subjects.map(subject => subject.Subject_Name);
         const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
 
+        const daysOfWeek = subjects.map(subject => subject.Day_Of_Week);
+    const startTimes = subjects.map(subject => subject.Start_Time);
+    const endTimes = subjects.map(subject => subject.End_Time);
+
         console.log(subjects);
         console.log(subjectCodes);
         console.log(subjectNames);
