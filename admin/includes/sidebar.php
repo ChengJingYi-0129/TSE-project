@@ -45,6 +45,19 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
 
     <?php if ($role === 'admin') { ?>
     <!-- Admin-only menus -->
+     <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#facultyMenu" aria-expanded="false" aria-controls="facultyMenu">
+        <span class="menu-title">Faculty</span>
+        <i class="icon-organization menu-icon"></i>
+      </a>
+      <div class="collapse" id="facultyMenu">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" href="add-faculty.php">Add Faculty</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-faculty.php">Manage Faculty</a></li>
+        </ul>
+      </div>
+    </li>
+    
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#subjectMenu" aria-expanded="false" aria-controls="subjectMenu">
         <span class="menu-title">Subject</span>
@@ -83,6 +96,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
         </ul>
       </div>
     </li>
+
+    
+      
 
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#studentMenu" aria-expanded="false" aria-controls="studentMenu">
