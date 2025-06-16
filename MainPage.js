@@ -68,53 +68,26 @@ function EAB() { //done
 function ShoppingCart() {
     ClearAll();
     document.getElementById("ShoppingCart").style.display = "block";
-    
-    const xhr= new XMLHttpRequest();
-    xhr.open("GET", "GetSubject.php", true);
-    xhr.onload = function() {
-        const subjects = JSON.parse(xhr.responseText);
+    document.getElementById("ShoppingCart").innerHTML = "";
+    document.getElementById("ShoppingCart").innerHTML = "<h1>Shopping Cart</h1>";
+    for (let i = 0; i < allSubjectCodes.length; i++) {
+        const subjectCode = allSubjectCodes[i];
+        const subjectName = allSubjectNames[i];
+        const subjectCreditHours = allSubjectCredits[i];
+        document.getElementById("ShoppingCart").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
+            <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
+            <span class='subject-name'>Subject Name: ${subjectName}</span><br>
+            <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            </div>`;
+    }
+    if (allSubjectCodes.length === 0) {
+        document.getElementById("ShoppingCart").innerHTML += "<p>No classes are in the Shopping Cart. Please proceed to planner to add class</p>";
+        document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
+    } else {
+    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
+    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='DropClasses()' style='color:black;'>Drop Class</button>`;
+    }
 
-        const subjectCodes = subjects.map(subject => subject.Subject_Code);
-        const subjectNames = subjects.map(subject => subject.Subject_Name);
-        const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
-
-        console.log(subjects);
-        console.log(subjectCodes);
-        console.log(subjectNames);
-        console.log(subjectCredits);
-
-        const subjectList = document.getElementById('ShoppingCart');
-        subjectList.innerHTML = ''; // Clear previous content
-         subjects.forEach(subject => {
-                            const subjectDiv = document.createElement('div');
-                            subjectDiv.style.border = '2px solid #ccc'; // Optional: Add a border for better visibility
-                            subjectDiv.classList.add('subject-item'); // Optional: Add a class for styling
-
-                            // Create a paragraph or any other element to display the subject details
-                            const subjectDetails = document.createElement('p');
-                            subjectDetails.innerHTML = `
-                            <span class="subject-code">Subject Code: ${subject.Subject_Code}</span>
-                            <span class="subject-name">${subject.Subject_Name}</span>
-                            <span class="credit-hours">Credit Hours: ${subject.Subject_Credit_Hours}</span>`;
-
-                            // Create a button to add the class
-                            const addButton = document.createElement('button');
-                            addButton.innerHTML = 'Add Class'; // Set the button text
-                            addButton.style.color = 'black';
-                            addButton.addEventListener('click', () => {
-                                // Handle adding the class when clicked
-                                addClass(subject.Subject_Code,subject.Subject_Name,subject.Subject_Credit_Hours); // You can create an `addClass` function to handle this action
-                            });
-
-                            // Append the subject details and button to the subject div
-                            subjectDiv.appendChild(subjectDetails);
-                            subjectDiv.appendChild(addButton);
-
-                            // Append the subject div to the subject list
-                            subjectList.appendChild(subjectDiv);
-                    });
-                };
-                xhr.send();
 }
 
 function addClass(subjectCode, subjectName, subjectCreditHours) {
@@ -136,7 +109,8 @@ function ClassSearchAndEnroll() {
 function DropClasses() {
     ClearAll();
     document.getElementById("DropClasses").style.display="block";
-     document.getElementById("DropClasses").innerHTML="";
+    document.getElementById("DropClasses").innerHTML="";
+    document.getElementById("DropClasses").innerHTML="<h1>Drop Classes</h1>";
     for (let i = 0; i < allSubjectCodes.length; i++) {
         const subjectCode = allSubjectCodes[i];
         const subjectName = allSubjectNames[i];
@@ -179,7 +153,53 @@ function SwapClasses() {
 function Planner() {
     ClearAll();
     document.getElementById("Planner").style.display="block";
-    document.getElementById("Planner").innerHTML="Planner";
+    const xhr= new XMLHttpRequest();
+    xhr.open("GET", "GetSubject.php", true);
+    xhr.onload = function() {
+        const subjects = JSON.parse(xhr.responseText);
+
+        const subjectCodes = subjects.map(subject => subject.Subject_Code);
+        const subjectNames = subjects.map(subject => subject.Subject_Name);
+        const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
+
+        console.log(subjects);
+        console.log(subjectCodes);
+        console.log(subjectNames);
+        console.log(subjectCredits);
+
+        const subjectList = document.getElementById('Planner');
+        subjectList.innerHTML = ''; // Clear previous content
+        subjectList.innerHTML = '<h1>Planner</h1>';
+         subjects.forEach(subject => {
+                            const subjectDiv = document.createElement('div');
+                            subjectDiv.style.border = '2px solid #ccc'; // Optional: Add a border for better visibility
+                            subjectDiv.classList.add('subject-item'); // Optional: Add a class for styling
+
+                            // Create a paragraph or any other element to display the subject details
+                            const subjectDetails = document.createElement('p');
+                            subjectDetails.innerHTML = `
+                            <span class="subject-code">Subject Code: ${subject.Subject_Code}</span>
+                            <span class="subject-name">${subject.Subject_Name}</span>
+                            <span class="credit-hours">Credit Hours: ${subject.Subject_Credit_Hours}</span>`;
+
+                            // Create a button to add the class
+                            const addButton = document.createElement('button');
+                            addButton.innerHTML = 'Add Class'; // Set the button text
+                            addButton.style.color = 'black';
+                            addButton.addEventListener('click', () => {
+                                // Handle adding the class when clicked
+                                addClass(subject.Subject_Code,subject.Subject_Name,subject.Subject_Credit_Hours); // You can create an `addClass` function to handle this action
+                            });
+
+                            // Append the subject details and button to the subject div
+                            subjectDiv.appendChild(subjectDetails);
+                            subjectDiv.appendChild(addButton);
+
+                            // Append the subject div to the subject list
+                            subjectList.appendChild(subjectDiv);
+                    });
+                };
+                xhr.send();
 }
 
 function EnrollByMyRequirements() {
@@ -211,7 +231,36 @@ document.getElementById("weeklyTabButton").addEventListener("click", function() 
 function EnrollmentSummary() {
     ClearAll();
     document.getElementById("EnrollmentSummary").style.display="block";
-    document.getElementById("EnrollmentSummary").innerHTML="Enrollment Summary";
+     document.getElementById("EnrollmentSummary").innerHTML ="<h1>Enrollment Summary</h1>";
+    for (let i = 0; i < allSubjectCodes.length; i++) {
+        const subjectCode = allSubjectCodes[i];
+        const subjectName = allSubjectNames[i];
+        const subjectCreditHours = allSubjectCredits[i];
+        document.getElementById("EnrollmentSummary").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
+            <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
+            <span class='subject-name'>Subject Name: ${subjectName}</span><br>
+            <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            </div>`;
+    }
+    if (allSubjectCodes.length === 0) {
+        document.getElementById("EnrollmentSummary").innerHTML = "<p>No classes are in the Shopping Cart. Please proceed to planner to add class</p>";
+        document.getElementById("EnrollmentSummary").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
+    } else {
+    document.getElementById("EnrollmentSummary").innerHTML +=`<button onclick='Enroll()' style='color:black;'>Enroll</button>`;
+    }
+}
+
+function Enroll() {
+    var total = allSubjectCredits.reduce((a, b) => a + b, 0);
+
+    if (total < 12) {
+        alert(`You must enroll in at least 12 credit hours. You are currently enrolling ${total} hours`);
+        return;
+    }
+    else if (total > 20) {
+        alert(`You cannot enroll in more than 20 credit hours. You are currently enrolling ${total} hours`);
+        return;
+    }
 }
 
 // Function to display the "View My Classes" section

@@ -15,5 +15,8 @@ if (!ID) {
         let temp2 = " Valid 10 minutes until ";
         document.getElementById("text1").innerHTML = temp + temp1b + temp2 + temp3.toLocaleString();
         document.getElementById("ID").value = ID;
-        form.submit();
     };
+
+    function ValidateOTP(){
+        form.submit();
+    }
