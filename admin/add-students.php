@@ -11,7 +11,7 @@ if (!isset($_SESSION['sturecmsaid']) || empty($_SESSION['sturecmsaid'])) {
 if (isset($_POST['submit'])) {
     $id = $_POST['Student_ID'];
     $name = $_POST['Student_Name'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password = $_POST['password'];
     $contact = $_POST['Student_Contact_Number'];
     $regdate = $_POST['Date_Registered'];
     $gradate = $_POST['Date_Graduated'];
