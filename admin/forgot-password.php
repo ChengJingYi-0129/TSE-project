@@ -34,7 +34,7 @@ echo "<script>alert('Email id or Mobile no is invalid');</script>";
 <html lang="en">
   <head>
   
-    <title>Student  Management System|| Forgot Password</title>
+    <title>Student  Enrollment System|| Forgot Password</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
@@ -67,7 +67,7 @@ return true;
             <div class="col-lg-4 mx-auto">
               <div class="auth-form-light text-left p-5">
                    <div class="brand-logo" align="center" style="font-weight:bold">
-     Student  Management System
+     Student  Enrollment System
                 </div>
                 <h4>RECOVER PASSWORD</h4>
                 <h6 class="font-weight-light">Enter your email address and mobile number to reset password!</h6>
