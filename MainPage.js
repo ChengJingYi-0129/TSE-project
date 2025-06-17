@@ -162,9 +162,9 @@ function Planner() {
         const subjectNames = subjects.map(subject => subject.Subject_Name);
         const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
 
-        const daysOfWeek = subjects.map(subject => subject.Day_Of_Week);
-    const startTimes = subjects.map(subject => subject.Start_Time);
-    const endTimes = subjects.map(subject => subject.End_Time);
+        const daysOfWeek = subjects.map(subject => subject.Days_Of_Week);
+        const startTimes = subjects.map(subject => subject.Start_Times);
+        const endTimes = subjects.map(subject => subject.End_Times);
 
         console.log(subjects);
         console.log(subjectCodes);
@@ -185,6 +185,20 @@ function Planner() {
                             <span class="subject-code">Subject Code: ${subject.Subject_Code}</span>
                             <span class="subject-name">${subject.Subject_Name}</span>
                             <span class="credit-hours">Credit Hours: ${subject.Subject_Credit_Hours}</span>`;
+
+                            const scheduleSelect = document.createElement('select');
+                            scheduleSelect.className = 'class-and-time';
+                            // Combine day, start, and end time for each schedule
+                            /*
+                            for (let i = 0; i < subject.Days_Of_Week.length; i++) {
+                                const day = subject.Days_Of_Week[i];
+                                const start = subject.Start_Times[i];
+                                const end = subject.End_Times[i];
+                                const option = document.createElement('option');
+                                option.value = `${day} ${start}-${end}`;
+                                option.textContent = `${day} ${start} - ${end}`;
+                                scheduleSelect.appendChild(option);
+                            }*/
 
                             // Create a button to add the class
                             const addButton = document.createElement('button');
