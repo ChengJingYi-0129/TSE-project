@@ -121,6 +121,14 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
       </a>
     </li>
 <?php if ($role === 'lecturer') { ?>
+
+    <li class="nav-item">
+      <a class="nav-link" href="manage-grade.php">
+        <span class="menu-title">Grades</span>
+        <i class="icon-graduation menu-icon"></i>
+      </a>
+    </li>                
+                
     <li class="nav-item">
       <a class="nav-link" href="manage-timetable.php">
         <span class="menu-title">Timetable</span>
