@@ -73,52 +73,6 @@ function EAB() { //done
     }
 }
 
-function ShoppingCart() {
-    ClearAll();
-    document.getElementById("ShoppingCart").style.display = "block";
-    document.getElementById("ShoppingCart").innerHTML = "";
-    document.getElementById("ShoppingCart").innerHTML = "<h1>Shopping Cart</h1>";
-    for (let i = 0; i < allSubjectCodes.length; i++) {
-        const subjectCode = allSubjectCodes[i];
-        const subjectName = allSubjectNames[i];
-        const subjectCreditHours = allSubjectCredits[i];
-        const subjectDay=allSubjectDays[i];
-        const subjectStart=allSubjectStart[i];
-        const subjectEnd=allSubjectEnd[i];
-        document.getElementById("ShoppingCart").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
-            <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
-            <span class='subject-name'>Subject Name: ${subjectName}</span><br>
-            <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
-            <span class='credit-hours'>Day: ${subjectDay}</span><br>
-            <span class='credit-hours'>From: ${subjectStart}</span><br>
-            <span class='credit-hours'> To : ${subjectEnd}</span><br>
-            </div>`;
-    }
-    if (allSubjectCodes.length === 0) {
-        document.getElementById("ShoppingCart").innerHTML += "<p>No classes are in the Shopping Cart. Please proceed to planner to add class</p>";
-        document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
-    } else {
-    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
-    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='DropClasses()' style='color:black;'>Drop Class</button>`;
-    }
-
-}
-
-function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
-    subjectCode = subjectCode.trim();
-    const [SubjectDay, TimeRange]=subjectDay.split(' ');
-    const [start, end]=TimeRange.split('-');
-    if (allSubjectCodes.includes(subjectCode)) {
-        return; // Class already added, do nothing
-    }
-    allSubjectCodes.push(subjectCode);
-    allSubjectNames.push(subjectName);
-    allSubjectCredits.push(subjectCreditHours);
-    allSubjectDays.push(SubjectDay);
-    allSubjectStart.push(start);
-    allSubjectEnd.push(end);
-}
-
 function ClassSearchAndEnroll() {
     ClearAll();
     document.getElementById("ClassSearchAndEnroll").style.display="block";
@@ -189,7 +143,10 @@ function Planner() {
 
         const subjectList = document.getElementById('Planner');
         subjectList.innerHTML = ''; // Clear previous content
-        subjectList.innerHTML = '<h1>Planner</h1>';
+        
+        const plannerTitle = document.createElement('h1');
+        plannerTitle.textContent = 'Planner';
+        subjectList.appendChild(plannerTitle);
         
         subjects.forEach(subject => {
             const subjectDiv = document.createElement('div');
@@ -239,9 +196,9 @@ function Planner() {
                 option.style.color='black';
                 scheduleSelect.appendChild(option);
             }
-            listForDays_Of_Week.push(subject.Days_Of_Week);
-            listForlistForStartTimes.push(subject.Start_Times);
-            listForlistForEndTimes.push(subject.End_Times);
+            //listForlistForDays_Of_Week.push(subject.Days_Of_Week);
+            //listForlistForStartTimes.push(subject.Start_Times);
+            //listForlistForEndTimes.push(subject.End_Times);
 
             // Add class button
             const addButton = document.createElement('button');
@@ -283,6 +240,53 @@ function Planner() {
         });
     };
     xhr.send();
+}
+
+function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
+    subjectCode = subjectCode.trim();
+    const [SubjectDay, TimeRange]=subjectDay.split(' ');
+    const [start, end]=TimeRange.split('-');
+    if (allSubjectCodes.includes(subjectCode)) {
+        return; // Class already added, do nothing
+    }
+    allSubjectCodes.push(subjectCode);
+    allSubjectNames.push(subjectName);
+    allSubjectCredits.push(subjectCreditHours);
+    allSubjectDays.push(SubjectDay);
+    allSubjectStart.push(start);
+    allSubjectEnd.push(end);
+}
+
+
+function ShoppingCart() {
+    ClearAll();
+    document.getElementById("ShoppingCart").style.display = "block";
+    document.getElementById("ShoppingCart").innerHTML = "";
+    document.getElementById("ShoppingCart").innerHTML = "<h1>Shopping Cart</h1>";
+    for (let i = 0; i < allSubjectCodes.length; i++) {
+        const subjectCode = allSubjectCodes[i];
+        const subjectName = allSubjectNames[i];
+        const subjectCreditHours = allSubjectCredits[i];
+        const subjectDay=allSubjectDays[i];
+        const subjectStart=allSubjectStart[i];
+        const subjectEnd=allSubjectEnd[i];
+        document.getElementById("ShoppingCart").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
+            <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
+            <span class='subject-name'>Subject Name: ${subjectName}</span><br>
+            <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            <span class='credit-hours'>Day: ${subjectDay}</span><br>
+            <span class='credit-hours'>From: ${subjectStart}</span><br>
+            <span class='credit-hours'> To : ${subjectEnd}</span><br>
+            </div>`;
+    }
+    if (allSubjectCodes.length === 0) {
+        document.getElementById("ShoppingCart").innerHTML += "<p>No classes are in the Shopping Cart. Please proceed to planner to add class</p>";
+        document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
+    } else {
+    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
+    document.getElementById("ShoppingCart").innerHTML +=`<button onclick='DropClasses()' style='color:black;'>Drop Class</button>`;
+    }
+
 }
 
 // Helper function to format time (remove seconds if present)
