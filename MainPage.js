@@ -13,6 +13,14 @@ document.getElementById("EnrollmentSummaryButton").addEventListener("click", Enr
 var allSubjectCodes = [];
 var allSubjectNames = [];
 var allSubjectCredits = [];
+var allSubjectDays=[];
+var allSubjectStart=[];
+var allSubjectEnd=[];
+
+//stock a list of available data for corresponding subject
+var listForlistForDays_Of_Week=[];
+var listForlistForStartTimes=[];
+var listForlistForEndTimes=[];
 
 function ClearAll(){
     document.getElementById("EnrollmentAppointment").style.display="none";
@@ -36,7 +44,7 @@ function EAB() { //done
     const Date1End = new Date("2025-04-12");
     const Date2Start = new Date("2025-06-24");
     const Date2End = new Date("2025-08-23");
-    const Date3Start = new Date("2024-09-28");
+    const Date3Start = new Date("2025-09-28");
     const Date3End = new Date("2025-11-16");
 
     currentMonth = currentDate.getMonth();
@@ -74,10 +82,16 @@ function ShoppingCart() {
         const subjectCode = allSubjectCodes[i];
         const subjectName = allSubjectNames[i];
         const subjectCreditHours = allSubjectCredits[i];
+        const subjectDay=allSubjectDays[i];
+        const subjectStart=allSubjectStart[i];
+        const subjectEnd=allSubjectEnd[i];
         document.getElementById("ShoppingCart").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
             <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
             <span class='subject-name'>Subject Name: ${subjectName}</span><br>
             <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            <span class='credit-hours'>Day: ${subjectDay}</span><br>
+            <span class='credit-hours'>From: ${subjectStart}</span><br>
+            <span class='credit-hours'> To : ${subjectEnd}</span><br>
             </div>`;
     }
     if (allSubjectCodes.length === 0) {
@@ -90,14 +104,19 @@ function ShoppingCart() {
 
 }
 
-function addClass(subjectCode, subjectName, subjectCreditHours) {
+function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
     subjectCode = subjectCode.trim();
+    const [SubjectDay, TimeRange]=subjectDay.split(' ');
+    const [start, end]=TimeRange.split('-');
     if (allSubjectCodes.includes(subjectCode)) {
         return; // Class already added, do nothing
     }
     allSubjectCodes.push(subjectCode);
     allSubjectNames.push(subjectName);
     allSubjectCredits.push(subjectCreditHours);
+    allSubjectDays.push(SubjectDay);
+    allSubjectStart.push(start);
+    allSubjectEnd.push(end);
 }
 
 function ClassSearchAndEnroll() {
@@ -115,10 +134,16 @@ function DropClasses() {
         const subjectCode = allSubjectCodes[i];
         const subjectName = allSubjectNames[i];
         const subjectCreditHours = allSubjectCredits[i];
+        const subjectDay=allSubjectDays[i];
+        const subjectStart=allSubjectStart[i];
+        const subjectEnd=allSubjectEnd[i];
         document.getElementById("DropClasses").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
             <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
             <span class='subject-name'>Subject Name: ${subjectName}</span><br>
             <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            <span class='credit-hours'>Day: ${subjectDay}</span><br>
+            <span class='credit-hours'>From: ${subjectStart}</span><br>
+            <span class='credit-hours'> To : ${subjectEnd}</span><br>
             <button onclick='removeClass("${subjectCode}")' style='color:black;'>Drop Class</button>
             </div>`;
     }
@@ -129,13 +154,17 @@ function removeClass(subjectCode) {
     allSubjectCodes.splice(index, 1);
     allSubjectNames.splice(index, 1);
     allSubjectCredits.splice(index, 1);
+    allSubjectDays.splice(index, 1);
+    allSubjectStart.splice(index, 1);
+    allSubjectEnd.splice(index, 1);
     DropClasses(); // Refresh the Shopping Cart display
 }
 
-function UpdateClasses() {
+function UpdateClasses() {//doing
     ClearAll();
     document.getElementById("UpdateClasses").style.display="block";
-    document.getElementById("UpdateClasses").innerHTML="Update Classes";
+    document.getElementById("UpdateClasses").innerHTML="";
+    document.getElementById("UpdateClasses").innerHTML="";
 }
 
 function BrowseCourseCatalog() {
@@ -152,72 +181,113 @@ function SwapClasses() {
 
 function Planner() {
     ClearAll();
-    document.getElementById("Planner").style.display="block";
-    const xhr= new XMLHttpRequest();
+    document.getElementById("Planner").style.display = "block";
+    const xhr = new XMLHttpRequest();
     xhr.open("GET", "GetSubject.php", true);
     xhr.onload = function() {
         const subjects = JSON.parse(xhr.responseText);
 
-        const subjectCodes = subjects.map(subject => subject.Subject_Code);
-        const subjectNames = subjects.map(subject => subject.Subject_Name);
-        const subjectCredits = subjects.map(subject => subject.Subject_Credit_Hours);
-
-        const daysOfWeek = subjects.map(subject => subject.Days_Of_Week);
-        const startTimes = subjects.map(subject => subject.Start_Times);
-        const endTimes = subjects.map(subject => subject.End_Times);
-
-        console.log(subjects);
-        console.log(subjectCodes);
-        console.log(subjectNames);
-        console.log(subjectCredits);
-
         const subjectList = document.getElementById('Planner');
         subjectList.innerHTML = ''; // Clear previous content
         subjectList.innerHTML = '<h1>Planner</h1>';
-         subjects.forEach(subject => {
-                            const subjectDiv = document.createElement('div');
-                            subjectDiv.style.border = '2px solid #ccc'; // Optional: Add a border for better visibility
-                            subjectDiv.classList.add('subject-item'); // Optional: Add a class for styling
+        
+        subjects.forEach(subject => {
+            const subjectDiv = document.createElement('div');
+            subjectDiv.style.border = '2px solid #ccc';
+            subjectDiv.style.padding = '10px';
+            subjectDiv.style.marginBottom = '10px';
+            subjectDiv.classList.add('subject-item');
 
-                            // Create a paragraph or any other element to display the subject details
-                            const subjectDetails = document.createElement('p');
-                            subjectDetails.innerHTML = `
-                            <span class="subject-code">Subject Code: ${subject.Subject_Code}</span>
-                            <span class="subject-name">${subject.Subject_Name}</span>
-                            <span class="credit-hours">Credit Hours: ${subject.Subject_Credit_Hours}</span>`;
+            // Subject basic info
+            const subjectInfo = document.createElement('div');
+            subjectInfo.innerHTML = `
+                <span class="subject-code"><strong>Subject Code:</strong> ${subject.Subject_Code}</span><br>
+                <span class="subject-name"><strong>Subject Name:</strong> ${subject.Subject_Name}</span><br>
+                <span class="credit-hours"><strong>Credit Hours:</strong> ${subject.Subject_Credit_Hours}</span><br>
+            `;
 
-                            const scheduleSelect = document.createElement('select');
-                            scheduleSelect.className = 'class-and-time';
-                            // Combine day, start, and end time for each schedule
-                            /*
-                            for (let i = 0; i < subject.Days_Of_Week.length; i++) {
-                                const day = subject.Days_Of_Week[i];
-                                const start = subject.Start_Times[i];
-                                const end = subject.End_Times[i];
-                                const option = document.createElement('option');
-                                option.value = `${day} ${start}-${end}`;
-                                option.textContent = `${day} ${start} - ${end}`;
-                                scheduleSelect.appendChild(option);
-                            }*/
+            // Schedule selection dropdown
+            const scheduleLabel = document.createElement('label');
+            scheduleLabel.innerHTML = '<strong>Select Schedule:</strong> ';
+            scheduleLabel.style.display = 'block';
+            scheduleLabel.style.margin = '10px 0 5px 0';
+            scheduleLabel.style.color='!important';
+            
+            const scheduleSelect = document.createElement('select');
+            scheduleSelect.className = 'class-and-time';
+            scheduleSelect.style.padding = '5px';
+            scheduleSelect.style.marginBottom = '10px';
+            scheduleSelect.style.color='black';
+            
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Select a schedule --';
+            defaultOption.style.color='black';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            scheduleSelect.appendChild(defaultOption);
+            
+            // Add schedule options
+            for (let i = 0; i < subject.Days_Of_Week.length; i++) {
+                const day = subject.Days_Of_Week[i];
+                const start = formatTime(subject.Start_Times[i]);
+                const end = formatTime(subject.End_Times[i]);
+                const option = document.createElement('option');
+                option.value = `${day} ${start}-${end}`;
+                option.textContent = `${day} ${start} - ${end}`;
+                option.style.color='black';
+                scheduleSelect.appendChild(option);
+            }
+            listForDays_Of_Week.push(subject.Days_Of_Week);
+            listForlistForStartTimes.push(subject.Start_Times);
+            listForlistForEndTimes.push(subject.End_Times);
 
-                            // Create a button to add the class
-                            const addButton = document.createElement('button');
-                            addButton.innerHTML = 'Add Class'; // Set the button text
-                            addButton.style.color = 'black';
-                            addButton.addEventListener('click', () => {
-                                // Handle adding the class when clicked
-                                addClass(subject.Subject_Code,subject.Subject_Name,subject.Subject_Credit_Hours); // You can create an `addClass` function to handle this action
-                            });
+            // Add class button
+            const addButton = document.createElement('button');
+            addButton.innerHTML = 'Add Class';
+            addButton.style.padding = '5px 10px';
+            addButton.style.backgroundColor = '#4CAF50';
+            addButton.style.color = 'white';
+            addButton.style.border = 'none';
+            addButton.style.borderRadius = '4px';
+            addButton.style.cursor = 'pointer';
+            addButton.addEventListener('click', () => {
+                if (scheduleSelect.value) {
+                    if (scheduleSelect.value===defaultOption.textContent)
+                    {
+                        alert("Please select a class session first!");
+                    }
+                    else
+                    {
+                        addClass(
+                        subject.Subject_Code,
+                        subject.Subject_Name,
+                        subject.Subject_Credit_Hours,
+                        scheduleSelect.value
+                    );
+                    }
+                } else {
+                    alert('Please select a schedule first');
+                }
+            });
 
-                            // Append the subject details and button to the subject div
-                            subjectDiv.appendChild(subjectDetails);
-                            subjectDiv.appendChild(addButton);
+            // Append elements to subject div
+            subjectDiv.appendChild(subjectInfo);
+            subjectDiv.appendChild(scheduleLabel);
+            subjectDiv.appendChild(scheduleSelect);
+            subjectDiv.appendChild(addButton);
 
-                            // Append the subject div to the subject list
-                            subjectList.appendChild(subjectDiv);
-                    });
-                };
-                xhr.send();
+            // Append subject div to the main list
+            subjectList.appendChild(subjectDiv);
+        });
+    };
+    xhr.send();
+}
+
+// Helper function to format time (remove seconds if present)
+function formatTime(timeString) {
+    return timeString.split(':').slice(0, 2).join(':'); // Takes only hours and minutes
 }
 
 function EnrollByMyRequirements() {
@@ -254,10 +324,16 @@ function EnrollmentSummary() {
         const subjectCode = allSubjectCodes[i];
         const subjectName = allSubjectNames[i];
         const subjectCreditHours = allSubjectCredits[i];
+        const subjectDay=allSubjectDays[i];
+        const subjectStart=allSubjectStart[i];
+        const subjectEnd=allSubjectEnd[i];
         document.getElementById("EnrollmentSummary").innerHTML += `<div class='subject-item' style='border: 2px solid #ccc;'>
             <span class='subject-code'>Subject Code: ${subjectCode}</span><br>
             <span class='subject-name'>Subject Name: ${subjectName}</span><br>
             <span class='credit-hours'>Credit Hours: ${subjectCreditHours}</span><br>
+            <span class='credit-hours'>Day: ${subjectDay}</span><br>
+            <span class='credit-hours'>From: ${subjectStart}</span><br>
+            <span class='credit-hours'> To : ${subjectEnd}</span><br>
             </div>`;
     }
     if (allSubjectCodes.length === 0) {
