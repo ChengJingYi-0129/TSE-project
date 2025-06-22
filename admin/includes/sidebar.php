@@ -97,8 +97,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
       </div>
     </li>
 
-    
-      
+ 
 
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#studentMenu" aria-expanded="false" aria-controls="studentMenu">
@@ -112,14 +111,22 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'admin';
         </ul>
       </div>
     </li>
-    <?php } ?>
 
     <li class="nav-item">
-      <a class="nav-link" href="manage-enrollments.php">
+      <a class="nav-link" data-toggle="collapse" href="#EnrollmentMenu" aria-expanded="false" aria-controls="EnrollmentMenu">
         <span class="menu-title">Enrollments</span>
         <i class="icon-doc menu-icon"></i>
       </a>
+      <div class="collapse" id="EnrollmentMenu">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"><a class="nav-link" href="add-Enrollments.php">Add Enrollments</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-Enrollments.php">Manage Enrollments</a></li>
+        </ul>
+      </div>
     </li>
+
+    <?php } ?>
+
 <?php if ($role === 'lecturer') { ?>
 
     <li class="nav-item">
