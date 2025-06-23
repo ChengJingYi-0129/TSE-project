@@ -1,12 +1,9 @@
 document.getElementById("EnrollmentAppointmentButton").addEventListener("click", EAB);
 document.getElementById("ShoppingCartButton").addEventListener("click", ShoppingCart);
-document.getElementById("ClassSearchAndEnrollButton").addEventListener("click", ClassSearchAndEnroll);
 document.getElementById("DropClassesButton").addEventListener("click", DropClasses);
 document.getElementById("UpdateClassesButton").addEventListener("click", UpdateClasses);
-document.getElementById("BrowseCourseCatalogButton").addEventListener("click", BrowseCourseCatalog);
 document.getElementById("SwapClassesButton").addEventListener("click", SwapClasses);
 document.getElementById("PlannerButton").addEventListener("click", Planner);
-document.getElementById("EnrollByMyRequirementsButton").addEventListener("click", EnrollByMyRequirements);
 document.getElementById("ViewMyClassesButton").addEventListener("click", ViewMyClasses);
 document.getElementById("EnrollmentSummaryButton").addEventListener("click", EnrollmentSummary);
 
