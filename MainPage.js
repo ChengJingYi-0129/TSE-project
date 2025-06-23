@@ -200,6 +200,7 @@ function Planner() {
                         subject.Subject_Credit_Hours,
                         scheduleSelect.value
                     );
+                     
                     }
                 } else {
                     alert('Please select a schedule first');
@@ -221,18 +222,40 @@ function Planner() {
 
 function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
     subjectCode = subjectCode.trim();
-    const [SubjectDay, TimeRange]=subjectDay.split(' ');
-    const [start, end]=TimeRange.split('-');
-    if (allSubjectCodes.includes(subjectCode)) {
-        return; // Class already added, do nothing
+    const [SubjectDay, TimeRange] = subjectDay.split(' ');
+    const [start, end] = TimeRange.split('-');
+
+    const timeToMinutes = (t) => {
+        const [hours, minutes] = t.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
+    const newStart = timeToMinutes(start);
+    const newEnd = timeToMinutes(end);
+
+    for (let i = 0; i < allSubjectDays.length; i++) {
+        if (allSubjectDays[i] === SubjectDay) {
+            const existingStart = timeToMinutes(allSubjectStart[i]);
+            const existingEnd = timeToMinutes(allSubjectEnd[i]);
+
+            if (!(newEnd <= existingStart || newStart >= existingEnd)) {
+                alert(`Time conflict detected with another subject on ${SubjectDay}!`);
+                return; 
+            }
+        }
     }
+
+
+    alert("Class added successfully!");
     allSubjectCodes.push(subjectCode);
     allSubjectNames.push(subjectName);
-    allSubjectCredits.push(subjectCreditHours);
+    allSubjectCredits.push(parseInt(subjectCreditHours));
     allSubjectDays.push(SubjectDay);
     allSubjectStart.push(start);
     allSubjectEnd.push(end);
+    
 }
+
 
 
 function ShoppingCart() {
@@ -321,7 +344,8 @@ function EnrollmentSummary() {
 }
 
 function Enroll() {
-    var total = allSubjectCredits.reduce((a, b) => a + b, 0);
+var total = allSubjectCredits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
 
     if (total < 12) {
         alert(`You must enroll in at least 12 credit hours. You are currently enrolling ${total} hours`);
@@ -331,6 +355,8 @@ function Enroll() {
         alert(`You cannot enroll in more than 20 credit hours. You are currently enrolling ${total} hours`);
         return;
     }
+    alert(`You have successfully enrolled in the following classes:\n\n${allSubjectCodes.join('\n')}\n\nTotal Credit Hours: ${total} Going to payment page...   `);
+    window.location.href = "payment.html";
 }
 
 // Function to display the "View My Classes" section
