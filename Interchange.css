@@ -18,6 +18,17 @@
     border:none;
 }
 
+#ImgInsideButton1{
+    height:150px;
+    width: 180px;
+    background-image:url(https://cdn-icons-png.flaticon.com/512/1067/1067382.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display:inline-block;
+    border:none;
+}
+
 #Enrollment:hover{
     background-color: #e0e0e0;
     border: 1px solid #000000;
@@ -32,4 +43,65 @@
     box-shadow: #000000;
     text-decoration: underline;
     color:#ff0000;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-btn {
+    height: 220px;
+    width: 220px;
+    background: #fff;
+    border: 2px solid #0077ff;
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #0077ff;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    cursor: pointer;
+    outline: none;
+    gap: 10px;
+}
+
+.main-btn:hover {
+    background: #e0f0ff;
+    color: #0055aa;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    border-color: #0055aa;
+}
+
+.main-btn:active {
+    background: #cce6ff;
+    color: #003366;
+    border-color: #003366;
+}
+
+.btn-img {
+    display: block;
+    width: 120px;
+    height: 120px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }

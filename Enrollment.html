@@ -6,25 +6,28 @@
     <title>MMU Student Registration</title>
     <link rel="icon" media="all" type="image/png" href="https://www.mmu.edu.my/images/favicon.png">
     <link rel="stylesheet" media="all" type="text/css" href="Interchange.css">
-    
-    <!-- Include jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script type="text/javascript">
-        // Ensure the DOM is ready before running the script
         $(document).ready(function() {
             $(":button").on("click", function() {
-                var clickedButton = $(this); // Store the clicked button
-                var nextButton = clickedButton.siblings(":button").first(); // Get the next button in the same container
-                
-                // Detach the clicked button and append it to the location of the next button
+                var clickedButton = $(this);
+                var nextButton = clickedButton.siblings(":button").first(); 
                 clickedButton.detach().insertBefore(nextButton);
             });
         });
     </script>
 </head>
 <body>
-    <button id="Enrollment" onclick="window.location.href='MainPage.html'"><img id="ImgInsideButton">Enrollment</button>
-    <button id="Payment" onclick="window.location.href='MainPage.html'"><img id="ImgInsideButton">Payment</button>
+    <div class="button-container">
+        <button class="main-btn" id="Enrollment" onclick="window.location.href='MainPage.html'">
+            <span class="btn-img" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9OA3n6vG8kSB2Zuvte2pjGbM3ovHX2Sa2dA&s');"></span>
+            <span>Enrollment</span>
+        </button>
+        <button class="main-btn" id="Payment" onclick="window.location.href='payment.html'">
+            <span class="btn-img" style="background-image:url('https://cdn-icons-png.flaticon.com/512/1067/1067382.png');"></span>
+            <span>Payment</span>
+        </button>
+    </div>
 </body>
 </html>

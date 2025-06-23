@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student and Lecturer Buttons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #00ffff;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .button-container h1 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #student {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #lecturer {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        #student:hover {
+            background-color: #45a049;
+        }
+
+        #lecturer:hover {
+            background-color: #0b7dda;
+        }
+
+        @media (max-width: 600px) {
+            .btn {
+                width: 100%;
+                padding: 20px;
+                font-size: 1rem;
+            }
+
+            .button-container h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="button-container">
+            <h1>Are you a student or lecturer</h1>
+            <button class="btn" id="student" name="role" onclick="navigate('Student')">Student</button>
+            <button class="btn" id="lecturer" name="role" onclick="navigate('Lecturer')">Lecturer</button>
+        </div>
+    </div>
+
+    <script>
+        function navigate(role) {
+            if (role === 'Student') {
+                window.location.href = 'Interface.html';
+            } else if (role === 'Lecturer') {
+                window.location.href = 'admin/';
+            }
+        }
+    </script>
+
+</body>
+</html>

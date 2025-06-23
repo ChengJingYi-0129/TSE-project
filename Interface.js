@@ -18,6 +18,5 @@ function getIDandPassword(){
     if (password === "yourCorrectPassword") { // Replace "yourCorrectPassword" with the actual correct password
         alert("Correct password");
     }
-
     form.submit();
 }

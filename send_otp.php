@@ -11,6 +11,6 @@ if (time() > $expiry) {
     echo "<script>alert('OTP expired'); window.history.back();</script>";
     die();
 }
-header("Location: MainPage.html");
+header("Location: Enrollment.html");
 exit();
 ?>

@@ -13,10 +13,7 @@ var allSubjectDays=[];
 var allSubjectStart=[];
 var allSubjectEnd=[];
 
-//stock a list of available data for corresponding subject
-var listForlistForDays_Of_Week=[];
-var listForlistForStartTimes=[];
-var listForlistForEndTimes=[];
+var ID = sessionStorage.getItem('userID');
 
 function ClearAll(){
     document.getElementById("EnrollmentAppointment").style.display="none";
@@ -101,13 +98,151 @@ function removeClass(subjectCode) {
     DropClasses(); // Refresh the Shopping Cart display
 }
 
-
-
-
 function SwapClasses() {
     ClearAll();
     document.getElementById("SwapClasses").style.display="block";
-    document.getElementById("SwapClasses").innerHTML="Swap Classes";
+    document.getElementById("SwapClasses").innerHTML="";
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "GetSubject.php", true);
+    xhr.onload = function() {
+        const subjects = JSON.parse(xhr.responseText);
+
+        const subjectList = document.getElementById('SwapClasses');
+        subjectList.innerHTML = ''; // Clear previous content
+        
+        const plannerTitle = document.createElement('h1');
+        plannerTitle.textContent = 'Swap Classes';
+        subjectList.appendChild(plannerTitle);
+        
+        subjects.forEach(subject => {
+            if (!allSubjectCodes.includes(subject.Subject_Code))
+            {
+                return;
+            }
+
+            const idx = allSubjectCodes.indexOf(subject.Subject_Code);
+            const currentDay = allSubjectDays[idx];
+            const currentStart = allSubjectStart[idx];
+            const currentEnd = allSubjectEnd[idx];
+
+            const subjectDiv = document.createElement('div');
+            subjectDiv.style.border = '2px solid #ccc';
+            subjectDiv.style.padding = '10px';
+            subjectDiv.style.marginBottom = '10px';
+            subjectDiv.classList.add('subject-item1');
+
+            // Subject basic info
+            const subjectInfo = document.createElement('div');
+            subjectInfo.innerHTML = `
+                <span class="subject-code"><strong>Subject Code:</strong> ${subject.Subject_Code}</span><br>
+                <span class="subject-name"><strong>Subject Name:</strong> ${subject.Subject_Name}</span><br>
+                <span class="credit-hours"><strong>Credit Hours:</strong> ${subject.Subject_Credit_Hours}</span><br>
+                <span class="credit-hours"><strong>Current Date:</strong> ${currentDay}</span><br>
+                <span class="credit-hours"><strong>    From    :</strong> ${currentStart}</span><br>
+                <span class="credit-hours"><strong>     To     :</strong> ${currentEnd}</span><br>
+            `;
+
+            // Schedule selection dropdown
+            const scheduleLabel = document.createElement('label');
+            scheduleLabel.innerHTML = '<strong>Select Schedule:</strong> ';
+            scheduleLabel.style.display = 'block';
+            scheduleLabel.style.margin = '10px 0 5px 0';
+            scheduleLabel.style.color='!important';
+            
+            const scheduleSelect = document.createElement('select');
+            scheduleSelect.className = 'class-and-time';
+            scheduleSelect.style.padding = '5px';
+            scheduleSelect.style.marginBottom = '10px';
+            scheduleSelect.style.color='black';
+            
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Select a schedule --';
+            defaultOption.style.color='black';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            scheduleSelect.appendChild(defaultOption);
+            
+            // Add schedule options
+            for (let i = 0; i < subject.Days_Of_Week.length; i++) {
+                const day = subject.Days_Of_Week[i];
+                const start = formatTime(subject.Start_Times[i]);
+                const end = formatTime(subject.End_Times[i]);
+                // Skip the current schedule
+                if (day === currentDay && start === currentStart && end === currentEnd) {
+                    continue;
+                }
+                const option = document.createElement('option');
+                option.value = `${day} ${start}-${end}`;
+                option.textContent = `${day} ${start} - ${end}`;
+                option.style.color = 'black';
+                scheduleSelect.appendChild(option);
+            }
+
+            // Add class button
+            const addButton = document.createElement('button');
+            addButton.innerHTML = 'Switch Class';
+            addButton.style.padding = '5px 10px';
+            addButton.style.backgroundColor = '#4CAF50';
+            addButton.style.color = 'white';
+            addButton.style.border = 'none';
+            addButton.style.borderRadius = '4px';
+            addButton.style.cursor = 'pointer';
+            addButton.addEventListener('click', () => {
+                if (scheduleSelect.value) {
+                    if (scheduleSelect.value===defaultOption.textContent)
+                    {
+                        alert("Please select a class session first!");
+                    }
+                    else
+                    {
+                        switchClass(
+                        subject.Subject_Code,
+                        scheduleSelect.value
+                    );
+                     
+                    }
+                } else {
+                    alert('Please select a schedule first');
+                }
+            });
+
+            // Append elements to subject div
+            subjectDiv.appendChild(subjectInfo);
+            subjectDiv.appendChild(scheduleLabel);
+            subjectDiv.appendChild(scheduleSelect);
+            subjectDiv.appendChild(addButton);
+
+            // Append subject div to the main list
+            subjectList.appendChild(subjectDiv);
+        });
+    };
+    xhr.send();
+}
+
+function switchClass(subjectCode,subjectDay){
+    subjectCode = subjectCode.trim();
+    const [SubjectDay, TimeRange] = subjectDay.split(' ');
+    const [start, end] = TimeRange.split('-');
+
+    for (let i = 0; i < allSubjectDays.length; i++) {
+        if (allSubjectCodes[i] === subjectCode) continue; // skip self
+        if (allSubjectDays[i] === SubjectDay) {
+            const existingStart = timeToMinutes(allSubjectStart[i]);
+            const existingEnd = timeToMinutes(allSubjectEnd[i]);
+            if (!(newEnd <= existingStart || newStart >= existingEnd)) {
+                alert(`Time conflict detected with ${allSubjectCodes[i]} (${allSubjectNames[i]}) on ${SubjectDay}!`);
+                return;
+            }
+        }
+    }
+
+    const index=allSubjectCodes.indexOf(subjectCode);
+    allSubjectDays[index]=SubjectDay;
+    allSubjectStart[index]=start;
+    allSubjectEnd[index]=end;
+    SwapClasses();
 }
 
 function Planner() {
@@ -173,9 +308,6 @@ function Planner() {
                 option.style.color='black';
                 scheduleSelect.appendChild(option);
             }
-            //listForlistForDays_Of_Week.push(subject.Days_Of_Week);
-            //listForlistForStartTimes.push(subject.Start_Times);
-            //listForlistForEndTimes.push(subject.End_Times);
 
             // Add class button
             const addButton = document.createElement('button');
@@ -239,7 +371,7 @@ function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
             const existingEnd = timeToMinutes(allSubjectEnd[i]);
 
             if (!(newEnd <= existingStart || newStart >= existingEnd)) {
-                alert(`Time conflict detected with another subject on ${SubjectDay}!`);
+                alert(`Time conflict detected with ${allSubjectCodes[i]} (${allSubjectNames[i]}) on ${SubjectDay}!`);
                 return; 
             }
         }
@@ -255,8 +387,6 @@ function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
     allSubjectEnd.push(end);
     
 }
-
-
 
 function ShoppingCart() {
     ClearAll();
@@ -295,26 +425,6 @@ function formatTime(timeString) {
 }
 
 
-
-document.getElementById("dailyTabButton").addEventListener("click", function() {
-    showContent(dailyContent);
-    document.getElementById("dailyTabButton").style.backgroundColor = "white";
-    document.getElementById("dailyTabButton").style.color = "black";
-});
-document.getElementById("weeklyTabButton").addEventListener("click", function() {
-    showContent(weeklyContent);
-    document.getElementById("weeklyTabButton").style.backgroundColor = "white";
-    document.getElementById("weeklyTabButton").style.color = "black";
-    const currentDate = new Date();
-    const operateDate= SetStartandEndDate(currentDate);
-    const strDate = operateDate.StartDate;
-    const strDate2 = operateDate.EndDate;
-    const month=strDate.split('-')[1]-1;
-    const year=strDate.split('-')[0];
-    generateCalendar(month, year);
-
-});
-
 function EnrollmentSummary() {
     ClearAll();
     document.getElementById("EnrollmentSummary").style.display="block";
@@ -339,14 +449,14 @@ function EnrollmentSummary() {
         document.getElementById("EnrollmentSummary").innerHTML = "<p>No classes are in the Shopping Cart. Please proceed to planner to add class</p>";
         document.getElementById("EnrollmentSummary").innerHTML +=`<button onclick='Planner()' style='color:black;'>Add Class</button>`;
     } else {
-    document.getElementById("EnrollmentSummary").innerHTML +=`<button onclick='Enroll()' style='color:black;'>Enroll</button>`;
+        document.getElementById("EnrollmentSummary").innerHTML +=`<button onclick='Enroll()' style='color:black;'>Enroll</button>`;
     }
 }
 
 function Enroll() {
 var total = allSubjectCredits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
-
-
+sessionStorage.setItem('Total', total);
+sessionStorage.setItem('allSubjectCodes',allSubjectCodes);
     if (total < 12) {
         alert(`You must enroll in at least 12 credit hours. You are currently enrolling ${total} hours`);
         return;
@@ -359,115 +469,98 @@ var total = allSubjectCredits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
     window.location.href = "payment.html";
 }
 
-// Function to display the "View My Classes" section
 function ViewMyClasses() {
-    const currentDate = new Date();
-    const operateDate= SetStartandEndDate(currentDate);
-    const strDate = operateDate.StartDate;
-    const strDate2 = operateDate.EndDate;
-    document.getElementById("Sdate").value = strDate;
-    document.getElementById("Edate").value = strDate2;
     ClearAll();
     document.getElementById("ViewMyClasses").style.display="block";
-    document.getElementById("ViewMyClasses").innerHTML="<h1>View My Classes</h1>\
-    <form><div class='form-floating mb-3 mt-3'>\
-    Start: <input type='date' class='form-control' id='Sdate' placeholder='Enter date'>\
-     End : <input type='date' class='form-control' id='Edate' placeholder='Enter date'>\
-    <button type='button' class='btn btn-primary' onclick='SetStartandEndDate(currentDate)'>Select</button>\
-    </div></form>\
-    <nav class='navbar navbar-default'>\
-    <div class='container-fluid'>\
-    <ul class='nav navbar-nav'>\
-    <li class='col-sm-6' style='background-color:white;'><a href='#' id='dailyTabButton'>Daily</a></li>\
-    <li class='col-sm-6' style='background-color:white;'><a href='#' id='weeklyTabButton'>Weekly</a></li>\
-    </ul>\
-    </div>\
-    </nav>\
-    <div id='dailyContent' class='content' style='background-color:white; display:none;'></div>\
-    <div id='weeklyContent' class='content' style='background-color:white; display:none;'>\
-    <div id='calendar-container'></div>\
-    </div>";
+    document.getElementById("ViewMyClasses").innerHTML="";
+    document.getElementById("ViewMyClasses").innerHTML="<h1>View My Classes</h1>";
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const startHour = 8; 
+    const endHour = 18; 
+
+    function timeToMinutes(t) {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+    }
+
+    // Build a 2D array for the calendar
+    const calendar = [];
+    for (let hour = startHour; hour < endHour; hour++) {
+        const row = {};
+        for (const day of days) {
+            row[day] = null;
+        }
+        calendar.push(row);
+    }
+
+    // Place classes in the calendar
+    for (let i = 0; i < allSubjectCodes.length; i++) {
+        const day = allSubjectDays[i];
+        const start = allSubjectStart[i];
+        const end = allSubjectEnd[i];
+        const code = allSubjectCodes[i];
+        const name = allSubjectNames[i];
+
+        // Only process if day is in our calendar
+        if (!days.includes(day)) continue;
+
+        const startMins = timeToMinutes(start);
+        const endMins = timeToMinutes(end);
+        const startRow = Math.floor((startMins - startHour * 60) / 60);
+        const endRow = Math.ceil((endMins - startHour * 60) / 60);
+
+        // Place class info in the starting cell, mark others as "occupied"
+        if (startRow >= 0 && endRow > startRow && endRow <= calendar.length) {
+            calendar[startRow][day] = {
+                rowspan: endRow - startRow,
+                code,
+                name,
+                start,
+                end
+            };
+            // Mark the rest as occupied
+            for (let r = startRow + 1; r < endRow; r++) {
+                calendar[r][day] = "occupied";
+            }
+        }
+    }
+
+    // Build the table HTML
+    let table = `<table border="1" style="border-collapse:collapse;width:100%;text-align:center;">
+        <tr>
+            <th>Time</th>
+            ${days.map(d => `<th>${d}</th>`).join("")}
+        </tr>`;
+
+    for (let h = 0; h < calendar.length; h++) {
+        const hourLabel = `${String(startHour + h).padStart(2, "0")}:00 - ${String(startHour + h + 1).padStart(2, "0")}:00`;
+        table += `<tr><td style="width:90px;">${hourLabel}</td>`;
+        for (const day of days) {
+            const cell = calendar[h][day];
+            if (cell === null) {
+                table += `<td></td>`;
+            } else if (cell === "occupied") {
+                continue;
+            } else {
+                table += `<td rowspan="${cell.rowspan}" style="background:#0000ff;font-weight:bold;">
+                    ${cell.code}<br>${cell.name}<br>${cell.start} - ${cell.end}
+                </td>`;
+            }
+        }
+        table += `</tr>`;
+    }
+    table += `</table>`;
+
+    document.getElementById("ViewMyClasses").innerHTML += table;
+    
 }
 
 function showContent(content) {
-  // Hide all content divs
   dailyContent.style.display = "none";
   weeklyContent.style.display = "none";
-
-  // Show the specific content
   content.style.display = "block";
 }
-
-function SetStartandEndDate(currentDate) {
-    const dayofWeek= currentDate.getDay();
-    const daysToMonday = (dayofWeek + 6) % 7; // Calculate days to Monday
-    currentDate.setDate(currentDate.getDate() - daysToMonday); // Set to last Monday
-    var strDate = currentDate.toString().split('T')[0];
-        
-    const daysToSunday=daysToMonday+6;
-    currentDate.setDate(currentDate.getDate() + daysToSunday); // Set to next Sunday
-    var strDate2 = currentDate.toString().split('T')[0];
-    return{
-        StartDate: strDate,
-        EndDate: strDate2
-    };
-}
-
-function generateCalendar(month, year) {
-            const container = document.getElementById('calendar-container');
-            container.innerHTML = ''; // Clear previous content
-
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-            // Create the calendar header with month and year
-            const header = document.createElement('div');
-            header.className = 'calendar-header';
-            header.innerHTML = `<h2>${monthNames[month]} ${year}</h2>`;
-            container.appendChild(header);
-
-            // Create the days of the week row
-            const daysOfWeekRow = document.createElement('div');
-            daysOfWeekRow.className = 'calendar';
-            daysOfWeek.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'header';
-                dayElement.textContent = day;
-                daysOfWeekRow.appendChild(dayElement);
-            });
-            container.appendChild(daysOfWeekRow);
-
-            // Calculate the first day of the month and the number of days in the month
-            const firstDay = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
-
-            // Create the grid for the calendar
-            const calendarGrid = document.createElement('div');
-            calendarGrid.className = 'calendar';
-
-            // Add empty divs for days before the first day of the month
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDiv = document.createElement('div');
-                calendarGrid.appendChild(emptyDiv);
-            }
-
-            // Add divs for each day of the month
-            for (let day = 1; day <= lastDate; day++) {
-                const dayDiv = document.createElement('div');
-                dayDiv.textContent = day;
-
-                // Highlight today's date
-                const today = new Date();
-                if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === day) {
-                    dayDiv.classList.add('today');
-                }
-
-                calendarGrid.appendChild(dayDiv);
-            }
-
-            container.appendChild(calendarGrid);
-        }
-
 
 window.onload = function() {
     ShoppingCart();
