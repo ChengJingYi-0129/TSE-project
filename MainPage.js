@@ -1,7 +1,6 @@
 document.getElementById("EnrollmentAppointmentButton").addEventListener("click", EAB);
 document.getElementById("ShoppingCartButton").addEventListener("click", ShoppingCart);
 document.getElementById("DropClassesButton").addEventListener("click", DropClasses);
-document.getElementById("UpdateClassesButton").addEventListener("click", UpdateClasses);
 document.getElementById("SwapClassesButton").addEventListener("click", SwapClasses);
 document.getElementById("PlannerButton").addEventListener("click", Planner);
 document.getElementById("ViewMyClassesButton").addEventListener("click", ViewMyClasses);
@@ -22,13 +21,9 @@ var listForlistForEndTimes=[];
 function ClearAll(){
     document.getElementById("EnrollmentAppointment").style.display="none";
     document.getElementById("ShoppingCart").style.display="none";
-    document.getElementById("ClassSearchAndEnroll").style.display="none";
     document.getElementById("DropClasses").style.display="none";
-    document.getElementById("UpdateClasses").style.display="none";
-    document.getElementById("BrowseCourseCatalog").style.display="none";
     document.getElementById("SwapClasses").style.display="none";
     document.getElementById("Planner").style.display="none";
-    document.getElementById("EnrollByMyRequirements").style.display="none";
     document.getElementById("ViewMyClasses").style.display="none";
     document.getElementById("EnrollmentSummary").style.display="none";
 }
@@ -70,11 +65,6 @@ function EAB() { //done
     }
 }
 
-function ClassSearchAndEnroll() {
-    ClearAll();
-    document.getElementById("ClassSearchAndEnroll").style.display="block";
-    document.getElementById("ClassSearchAndEnroll").innerHTML="Class Search and Enroll";
-}
 
 function DropClasses() {
     ClearAll();
@@ -111,18 +101,8 @@ function removeClass(subjectCode) {
     DropClasses(); // Refresh the Shopping Cart display
 }
 
-function UpdateClasses() {//doing
-    ClearAll();
-    document.getElementById("UpdateClasses").style.display="block";
-    document.getElementById("UpdateClasses").innerHTML="";
-    document.getElementById("UpdateClasses").innerHTML="";
-}
 
-function BrowseCourseCatalog() {
-    ClearAll();
-    document.getElementById("BrowseCourseCatalog").style.display="block";
-    document.getElementById("BrowseCourseCatalog").innerHTML="Browse Course Catalog";
-}   
+
 
 function SwapClasses() {
     ClearAll();
@@ -291,11 +271,6 @@ function formatTime(timeString) {
     return timeString.split(':').slice(0, 2).join(':'); // Takes only hours and minutes
 }
 
-function EnrollByMyRequirements() {
-    ClearAll();
-    document.getElementById("EnrollByMyRequirements").style.display="block";
-    document.getElementById("EnrollByMyRequirements").innerHTML="Enroll By My Requirements";
-}   
 
 
 document.getElementById("dailyTabButton").addEventListener("click", function() {
