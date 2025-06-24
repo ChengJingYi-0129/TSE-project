@@ -55,10 +55,10 @@ function EAB() { //done
     if((((currentMonth>Date1StartMonth) || (currentMonth==Date1StartMonth && currentDay>Date1StartDay)) && ((currentMonth<Date1EndMonth) || (currentMonth==Date1EndMonth && currentDay<Date1EndDay)))
     || (((currentMonth>Date2StartMonth) || (currentMonth==Date2StartMonth && currentDay>Date2StartDay)) && ((currentMonth<Date2EndMonth) || (currentMonth==Date2EndMonth && currentDay<Date2EndDay)))
     || (((currentMonth>Date3StartMonth) || (currentMonth==Date3StartMonth && currentDay>Date3StartDay)) && ((currentMonth<Date3EndMonth) || (currentMonth==Date3EndMonth && currentDay<Date3EndDay)))) {
-        document.getElementById("EnrollmentAppointment").innerHTML="You have an Enrollment Appointment";
+        document.getElementById("EnrollmentAppointment").innerHTML="<h1>You have an Enrollment Appointment</h1><p>Please click this button to proceed with it</p><button onclick='ShoppingCart()' style='color:black;'>Proceed</button>";
     }
     else{
-        document.getElementById("EnrollmentAppointment").innerHTML="You don't have an Enrollment Appointment";
+        document.getElementById("EnrollmentAppointment").innerHTML="<h1>You don't have an Enrollment Appointment</h1>";
     }
 }
 
@@ -95,6 +95,8 @@ function removeClass(subjectCode) {
     allSubjectDays.splice(index, 1);
     allSubjectStart.splice(index, 1);
     allSubjectEnd.splice(index, 1);
+    updateSessionCart();
+    saveAllSubjectsToSession();
     DropClasses(); // Refresh the Shopping Cart display
 }
 
@@ -242,6 +244,7 @@ function switchClass(subjectCode,subjectDay){
     allSubjectDays[index]=SubjectDay;
     allSubjectStart[index]=start;
     allSubjectEnd[index]=end;
+    saveAllSubjectsToSession();
     SwapClasses();
 }
 
@@ -385,11 +388,19 @@ function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
     allSubjectDays.push(SubjectDay);
     allSubjectStart.push(start);
     allSubjectEnd.push(end);
-    
+    updateSessionCart();
+    saveAllSubjectsToSession();
+}
+
+function updateSessionCart() {
+    var total = allSubjectCredits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+    sessionStorage.setItem('Total', total);
+    sessionStorage.setItem('allSubjectCodes', allSubjectCodes);
 }
 
 function ShoppingCart() {
     ClearAll();
+    loadAllSubjectsFromSession();
     document.getElementById("ShoppingCart").style.display = "block";
     document.getElementById("ShoppingCart").innerHTML = "";
     document.getElementById("ShoppingCart").innerHTML = "<h1>Shopping Cart</h1>";
@@ -564,4 +575,22 @@ function showContent(content) {
 
 window.onload = function() {
     ShoppingCart();
+}
+
+function saveAllSubjectsToSession() {
+    sessionStorage.setItem('allSubjectCodes', JSON.stringify(allSubjectCodes));
+    sessionStorage.setItem('allSubjectNames', JSON.stringify(allSubjectNames));
+    sessionStorage.setItem('allSubjectCredits', JSON.stringify(allSubjectCredits));
+    sessionStorage.setItem('allSubjectDays', JSON.stringify(allSubjectDays));
+    sessionStorage.setItem('allSubjectStart', JSON.stringify(allSubjectStart));
+    sessionStorage.setItem('allSubjectEnd', JSON.stringify(allSubjectEnd));
+}
+
+function loadAllSubjectsFromSession() {
+    allSubjectCodes = JSON.parse(sessionStorage.getItem('allSubjectCodes') || '[]');
+    allSubjectNames = JSON.parse(sessionStorage.getItem('allSubjectNames') || '[]');
+    allSubjectCredits = JSON.parse(sessionStorage.getItem('allSubjectCredits') || '[]');
+    allSubjectDays = JSON.parse(sessionStorage.getItem('allSubjectDays') || '[]');
+    allSubjectStart = JSON.parse(sessionStorage.getItem('allSubjectStart') || '[]');
+    allSubjectEnd = JSON.parse(sessionStorage.getItem('allSubjectEnd') || '[]');
 }

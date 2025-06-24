@@ -94,13 +94,31 @@
             width: 40px;
             height: 40px;
         }
+        
+        #returnButton {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/61/61449.png');
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-size: cover;
+            background-position: center;
+            border: none;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            z-index: 1000;
+            cursor: pointer;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
+    <button onclick="window.location.href='Enrollment.html'" id="returnButton"></button>
     <form action="payment.php" method="post" ID="paymentForm">
         <div class="payment-container">
         <h2>Payment Details</h2>
-        <form action="#" method="POST">
             <div class="form-group">
                 <label for="studentID">Student ID</label>
                 <input type="text" id="ID" name="ID" readonly>
@@ -132,8 +150,7 @@
             </div>
             <input type="hidden" name="total" id="total">
             <input type="hidden" name="allSubjectCodes" id="allSubjectCodes">
-            <button type="submit" class="submit-btn">Pay Now</button>
-        </form>
+            <button type="button" class="submit-btn" onclick="validate()">Pay Now</button>
         <div class="payment-summary">
             <p>Total Amount: <span id="totalAmount">RM 0.00</span></p>
         </div>
@@ -145,13 +162,25 @@
     var total=sessionStorage.getItem('Total');
     var allSubjectCodes=sessionStorage.getItem('allSubjectCodes');
     if (ID){
-        document.getElementById('ID').textContent=ID;
+        document.getElementById('ID').value=ID;
     }
     if (total) {
         var amount = parseInt(total) * 100;
         document.getElementById('totalAmount').textContent = 'RM ' + amount.toFixed(2);
         document.getElementById('total').value = amount;
         document.getElementById('allSubjectCodes').value = allSubjectCodes;
+    }
+    function validate(){
+        if (total<12){
+            alert('Too less credit hours, please enroll more subjects');
+        }
+        else if (total>20)
+        {
+            alert('Too much credit hours, please drop some subjects');
+        }
+        else{
+            form.submit();
+        }
     }
 </script>
 </html>

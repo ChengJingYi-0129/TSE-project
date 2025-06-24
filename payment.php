@@ -20,12 +20,8 @@ $payment_date = date('Y-m-d');
 $invoice_number = 'INV' . time() . rand(100,999);
 $status = 'Paid';
 
-//$stmt = $connection->prepare("INSERT INTO payment (payment_date, invoice_number, status, student_id, amount, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
-//$stmt->bind_param("ssssds", $payment_date, $invoice_number, $status, $student_id, $amount, $method);
-
-// s = string, i = integer, d = double
-$stmt = $connection->prepare("INSERT INTO payment (payment_date, invoice_number, status, amount, payment_method) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssis", $payment_date, $invoice_number, $status, $amount, $method);
+$stmt = $connection->prepare("INSERT INTO payment (payment_date, invoice_number, status, student_id, amount, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssds", $payment_date, $invoice_number, $status, $student_id, $amount, $method);
 
 if ($stmt->execute()) {
 } else {
@@ -67,10 +63,8 @@ $registration_start = $semesterInfo['registration_start'];
 $registration_end = $semesterInfo['registration_end'];
 
 foreach ($subjectCodesArray as $subjectCode) {
-    //$stmt = $connection->prepare("INSERT INTO enrollment (semester_id, enrollment_date, registration_start, registration_end, Subject_Code, student_id) VALUES (?, ?, ?, ?, ?, ?)");
-    //$stmt->bind_param("isssss", $semester_id, $payment_date, $registration_start, $registration_end, $subjectCode, $student_id);
-    $stmt = $connection->prepare("INSERT INTO enrollment (semester_id, enrollment_date, registration_start, registration_end, Subject_Code) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $semester_id, $payment_date, $registration_start, $registration_end, $subjectCode);
+    $stmt = $connection->prepare("INSERT INTO enrollment (semester_id, enrollment_date, registration_start, registration_end, Subject_Code, student_id) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssss", $semester_id, $payment_date, $registration_start, $registration_end, $subjectCode, $student_id);
     $stmt->execute();
     $stmt->close();
 }

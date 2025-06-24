@@ -85,9 +85,28 @@ if (isset($_POST['login'])) {
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="css/style.css">
-   
+    <style>
+      #returnButton {
+          background-image: url('https://cdn-icons-png.flaticon.com/512/61/61449.png');
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          background-size: cover;
+          background-position: center;
+          border: none;
+          background-color: #fff;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          z-index: 1000;
+          cursor: pointer;
+          padding: 0;
+      }
+    </style>
   </head>
   <body>
+    <button id="returnButton" onclick="window.location.href='../index.html'"></button>
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
         <div class="content-wrapper d-flex align-items-center auth">
