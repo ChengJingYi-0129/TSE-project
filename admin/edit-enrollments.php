@@ -4,59 +4,61 @@ error_reporting(0);
 include('includes/dbconnection.php');
 
 if (strlen($_SESSION['sturecmsaid'] == 0)) {
-    header('location:logout.php');
+  header('location:logout.php');
 } else {
-    $eid = $_GET['id'];
+  $eid = $_GET['id'];
 
-    if (isset($_POST['submit'])) {
-        $semester_id = $_POST['semester_id'];
-        $subject_code = $_POST['subject_code'];
-        $schedule_id = $_POST['schedule_id'];
-        $student_status = $_POST['student_status'];
-        $final_grade = $_POST['final_grade'];
-        $is_retake = $_POST['is_retake'];
+  if (isset($_POST['submit'])) {
+    $semester_id = $_POST['semester_id'];
+    $enrollment_date = $_POST['enrollment_date'];
+    $registration_start = $_POST['registration_start'];
+    $registration_end = $_POST['registration_end'];
+    $Subject_Code = $_POST['Subject_Code'];
+    $schedule_id = $_POST['schedule_id'];
 
-        $sql = "UPDATE enrollment 
-                SET semester_id = :semester_id,
-                    Subject_Code = :subject_code,
-                    schedule_id = :schedule_id,
-                    student_status = :student_status,
-                    final_grade = :final_grade,
-                    is_retake = :is_retake
-                WHERE enrollment_id = :eid";
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':semester_id', $semester_id);
-        $query->bindParam(':subject_code', $subject_code);
-        $query->bindParam(':schedule_id', $schedule_id);
-        $query->bindParam(':student_status', $student_status);
-        $query->bindParam(':final_grade', $final_grade);
-        $query->bindParam(':is_retake', $is_retake);
-        $query->bindParam(':eid', $eid);
-        $query->execute();
-
-        echo '<script>alert("Enrollment updated successfully")</script>';
-        echo "<script>window.location.href='manage-enrollment.php'</script>";
-    }
-
-    $sql = "SELECT * FROM enrollment WHERE enrollment_id = :eid";
+    $sql = "UPDATE enrollment SET semester_id=:semester_id, enrollment_date=:enrollment_date,
+            registration_start=:registration_start, registration_end=:registration_end,
+            Subject_Code=:Subject_Code, schedule_id=:schedule_id WHERE enrollment_id=:eid";
     $query = $dbh->prepare($sql);
+    $query->bindParam(':semester_id', $semester_id);
+    $query->bindParam(':enrollment_date', $enrollment_date);
+    $query->bindParam(':registration_start', $registration_start);
+    $query->bindParam(':registration_end', $registration_end);
+    $query->bindParam(':Subject_Code', $Subject_Code);
+    $query->bindParam(':schedule_id', $schedule_id);
     $query->bindParam(':eid', $eid);
     $query->execute();
-    $row = $query->fetch(PDO::FETCH_ASSOC);
+
+    echo '<script>alert("Enrollment updated successfully.");</script>';
+    echo "<script>window.location.href='manage-enrollment.php'</script>";
+  }
+
+  $sql = "SELECT * FROM enrollment WHERE enrollment_id = :eid";
+  $query = $dbh->prepare($sql);
+  $query->bindParam(':eid', $eid);
+  $query->execute();
+  $row = $query->fetch(PDO::FETCH_OBJ);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Edit Enrollment</title>
+  <!-- plugins:css -->
   <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+  <!-- Layout styles -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 <div class="container-scroller">
-<?php include_once('includes/header.php'); ?>
+<?php include('includes/header.php'); ?>
 <div class="container-fluid page-body-wrapper">
-<?php include_once('includes/sidebar.php'); ?>
+<?php include('includes/sidebar.php'); ?>
 <div class="main-panel">
 <div class="content-wrapper">
   <div class="page-header">
@@ -64,68 +66,54 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
   </div>
   <div class="card">
     <div class="card-body">
-      <form method="post">
-        <div class="form-group">
-          <label>Student ID</label>
-          <input type="text" class="form-control" value="<?php echo htmlentities($row['student_id']); ?>" readonly>
-        </div>
+      <form method="post" class="forms-sample">
         <div class="form-group">
           <label>Semester</label>
           <select name="semester_id" class="form-control" required>
-            <option value="">Select</option>
             <?php
             $stmt = $dbh->query("SELECT * FROM semester");
-            while ($sem = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $selected = $sem['semester_id'] == $row['semester_id'] ? "selected" : "";
-              echo "<option value='{$sem['semester_id']}' $selected>{$sem['semester_name']}</option>";
+            while ($sem = $stmt->fetch(PDO::FETCH_OBJ)) {
+              $sel = ($row->semester_id == $sem->semester_id) ? "selected" : "";
+              echo "<option value='$sem->semester_id' $sel>$sem->semester_name</option>";
             }
             ?>
           </select>
         </div>
         <div class="form-group">
+          <label>Enrollment Date</label>
+          <input type="date" name="enrollment_date" class="form-control" value="<?php echo $row->enrollment_date; ?>" required>
+        </div>
+        <div class="form-group">
+          <label>Registration Start</label>
+          <input type="date" name="registration_start" class="form-control" value="<?php echo $row->registration_start; ?>" required>
+        </div>
+        <div class="form-group">
+          <label>Registration End</label>
+          <input type="date" name="registration_end" class="form-control" value="<?php echo $row->registration_end; ?>" required>
+        </div>
+        <div class="form-group">
           <label>Subject</label>
-          <select name="subject_code" class="form-control" required>
-            <option value="">Select</option>
+          <select name="Subject_Code" class="form-control" required>
             <?php
             $stmt = $dbh->query("SELECT * FROM subject");
-            while ($sub = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $selected = $sub['Subject_Code'] == $row['Subject_Code'] ? "selected" : "";
-              echo "<option value='{$sub['Subject_Code']}' $selected>{$sub['Subject_Name']}</option>";
+            while ($sub = $stmt->fetch(PDO::FETCH_OBJ)) {
+              $sel = ($row->Subject_Code == $sub->Subject_Code) ? "selected" : "";
+              echo "<option value='$sub->Subject_Code' $sel>$sub->Subject_Name</option>";
             }
             ?>
           </select>
         </div>
         <div class="form-group">
           <label>Schedule</label>
-          <select name="schedule_id" class="form-control" required>
-            <option value="">Select</option>
+          <select name="schedule_id" class="form-control">
+            <option value="">None</option>
             <?php
-            $stmt = $dbh->query("SELECT schedule_id FROM schedule");
-            while ($sc = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $selected = $sc['schedule_id'] == $row['schedule_id'] ? "selected" : "";
-              echo "<option value='{$sc['schedule_id']}' $selected>{$sc['schedule_id']}</option>";
+            $stmt = $dbh->query("SELECT * FROM schedule");
+            while ($sc = $stmt->fetch(PDO::FETCH_OBJ)) {
+              $sel = ($row->schedule_id == $sc->schedule_id) ? "selected" : "";
+              echo "<option value='$sc->schedule_id' $sel>ID: $sc->schedule_id</option>";
             }
             ?>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Status</label>
-          <select name="student_status" class="form-control" required>
-            <option value="">Select</option>
-            <option value="Active" <?php if ($row['student_status'] == 'Active') echo 'selected'; ?>>Active</option>
-            <option value="Withdrawn" <?php if ($row['student_status'] == 'Withdrawn') echo 'selected'; ?>>Withdrawn</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Final Grade</label>
-          <input type="text" name="final_grade" class="form-control" value="<?php echo htmlentities($row['final_grade']); ?>">
-        </div>
-        <div class="form-group">
-          <label>Is Retake?</label>
-          <select name="is_retake" class="form-control" required>
-            <option value="">Select</option>
-            <option value="0" <?php if ($row['is_retake'] == 0) echo 'selected'; ?>>No</option>
-            <option value="1" <?php if ($row['is_retake'] == 1) echo 'selected'; ?>>Yes</option>
           </select>
         </div>
         <button type="submit" name="submit" class="btn btn-primary">Update</button>
@@ -133,9 +121,10 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
     </div>
   </div>
 </div>
-<?php include_once('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>
 </div></div></div>
 <script src="vendors/js/vendor.bundle.base.js"></script>
+<script src="vendors/select2/select2.min.js"></script>
 <script src="js/off-canvas.js"></script>
 <script src="js/misc.js"></script>
 </body>
