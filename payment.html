@@ -116,7 +116,7 @@
 </head>
 <body>
     <button onclick="window.location.href='Enrollment.html'" id="returnButton"></button>
-    <form action="payment.php" method="post" ID="paymentForm">
+    <form action="payment.php" method="post" id="paymentForm">
         <div class="payment-container">
         <h2>Payment Details</h2>
             <div class="form-group">
@@ -179,7 +179,7 @@
             alert('Too much credit hours, please drop some subjects');
         }
         else{
-            form.submit();
+            document.getElementById('paymentForm').submit();
         }
     }
 </script>
