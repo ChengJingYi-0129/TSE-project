@@ -61,7 +61,7 @@ if (strlen($_SESSION['sturecmsaid']) == 0) {
   </div>
   <div class="card">
     <div class="card-body">
-      <form method="post" class="forms-sample">
+      <form method="post" class="forms-sample" action="manage-enrollments.php">
         <div class="form-group">
           <label>Student</label>
           <select name="student_id" class="form-control" required>

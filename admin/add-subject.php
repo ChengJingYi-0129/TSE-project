@@ -29,7 +29,7 @@ if (strlen($_SESSION['sturecmsaid'] == 0)) {
         $query->bindParam(':graded', $graded, PDO::PARAM_INT);
         $query->bindParam(':prereq', $prereq, PDO::PARAM_STR);
         $query->bindParam(':elective', $elective, PDO::PARAM_INT);
-        $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_INT);
+        $query->bindParam(':faculty_id', $faculty_id, PDO::PARAM_STR);
 
         $query->execute();
         echo '<script>alert("Subject has been added.")</script>';

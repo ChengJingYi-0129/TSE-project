@@ -228,8 +228,15 @@ function switchClass(subjectCode,subjectDay){
     const [SubjectDay, TimeRange] = subjectDay.split(' ');
     const [start, end] = TimeRange.split('-');
 
+    const timeToMinutes = (t) => {
+        const [hours, minutes] = t.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+    const newStart = timeToMinutes(start);
+    const newEnd = timeToMinutes(end);
+
     for (let i = 0; i < allSubjectDays.length; i++) {
-        if (allSubjectCodes[i] === subjectCode) continue; // skip self
+        if (allSubjectCodes[i] === subjectCode) continue;
         if (allSubjectDays[i] === SubjectDay) {
             const existingStart = timeToMinutes(allSubjectStart[i]);
             const existingEnd = timeToMinutes(allSubjectEnd[i]);
@@ -245,6 +252,7 @@ function switchClass(subjectCode,subjectDay){
     allSubjectStart[index]=start;
     allSubjectEnd[index]=end;
     saveAllSubjectsToSession();
+    alert("Class swapped successfully!");
     SwapClasses();
 }
 
@@ -380,7 +388,11 @@ function addClass(subjectCode, subjectName, subjectCreditHours, subjectDay) {
         }
     }
 
-
+    if (allSubjectCodes.includes(subjectCode)&&allSubjectNames.includes(subjectName)&&(allSubjectCodes.indexOf(subjectCode)===allSubjectNames.indexOf(subjectName)))
+    {
+        alert('Class is selected!');
+        return;
+    }
     alert("Class added successfully!");
     allSubjectCodes.push(subjectCode);
     allSubjectNames.push(subjectName);
