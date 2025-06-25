@@ -170,17 +170,36 @@
         document.getElementById('total').value = amount;
         document.getElementById('allSubjectCodes').value = allSubjectCodes;
     }
-    function validate(){
-        if (total<12){
-            alert('Too less credit hours, please enroll more subjects');
-        }
-        else if (total>20)
-        {
-            alert('Too much credit hours, please drop some subjects');
-        }
-        else{
-            document.getElementById('paymentForm').submit();
-        }
+    function validate() {
+    var total = parseInt(sessionStorage.getItem('Total'));
+    var name = document.getElementById('name').value.trim();
+    var cardNumber = document.getElementById('card-number').value.trim();
+    var method = document.getElementById('method').value;
+    var expiry = document.getElementById('expiry').value;
+    var cvv = document.getElementById('cvv').value.trim();
+
+    if (!name || !cardNumber || !method || !expiry || !cvv) {
+        alert('Please fill in all payment details.');
+        return;
     }
+    if (isNaN(total) || total < 12) {
+        alert('Too few credit hours, please enroll more subjects.');
+        return;
+    }
+    if (total > 20) {
+        alert('Too many credit hours, please drop some subjects.');
+        return;
+    }
+    // Example: simple card number and CVV validation
+    if (!/^\d{16}$/.test(cardNumber.replace(/\s+/g, ''))) {
+        alert('Please enter a valid 16-digit card number.');
+        return;
+    }
+    if (!/^\d{3,4}$/.test(cvv)) {
+        alert('Please enter a valid CVV.');
+        return;
+    }
+    document.getElementById('paymentForm').submit();
+}
 </script>
 </html>
